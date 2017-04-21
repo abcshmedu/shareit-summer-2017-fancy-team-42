@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Ugly java script code for simple tests of shareit's REST interface.
+ * Ugly java script code for simple tests of shareit's resources interface.
  *  @author Axel Böttcher <axel.boettcher@hm.edu>
  */
 
