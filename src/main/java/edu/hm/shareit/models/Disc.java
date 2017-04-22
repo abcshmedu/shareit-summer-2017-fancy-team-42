@@ -1,7 +1,54 @@
 package edu.hm.shareit.models;
 
 /**
- * Created by markus on 21.04.17.
+ * @author Thomas Murschall
  */
 public class Disc extends Medium {
+    private String barcode;
+    private String director;
+    private int fsk;
+    
+    /**
+     * Empty constructor.
+     */
+    public Disc() {
+        super("");
+    }
+    /**
+     * Constructor.
+     * 
+     * @param barcode 
+     * @param director 
+     * @param fsk 
+     * @param title 
+     */
+    public Disc(String barcode, String director, int fsk, String title) {
+        super(title);
+        this.barcode = barcode;
+        this.director = director;
+        this.fsk = fsk;
+    } 
+    
+    /**
+     * 
+     * @return String, director
+     */
+    public String getDirector() {
+        return director;
+    }
+    /**
+     * 
+     * @return String, barcode
+     */
+    public String getBarcode() {
+        return barcode;
+    }
+    /**
+     * 
+     * @return int, fsk
+     */
+    public int getFsk() {
+        return fsk;
+    }
+
 }
