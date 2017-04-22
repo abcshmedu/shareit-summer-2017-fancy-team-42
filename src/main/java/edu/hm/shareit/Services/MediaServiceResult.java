@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response.Status;
  * @author Markus Krahl
  */
 public enum MediaServiceResult {
-    Succes(200, Status.ACCEPTED);
+    Succes(200, Status.ACCEPTED), Duplicate(400,Status.CONFLICT);
     private int code;
     private Status state;
 

@@ -21,6 +21,14 @@ public class MediaServiceImpl implements MediaService {
     public MediaServiceImpl() {
         bookList = new LinkedList<>();
         disclist = new LinkedList<>();
+
+        bookList.add(new Book("Peter Lustig", "1111", "Das Leben im Bauwagen"));
+        bookList.add(new Book("Hans Müller","1112","Wie man als Müller lebt"));
+        bookList.add(new Book("Astrid Lindgren", "1113", "Kalle Blomquist"));
+
+        disclist.add(new Disc("0001","Steven Spielberg",12,"Indiana Jones"));
+        disclist.add(new Disc("0002","George Lucas",6,"Star Wars Episode 4"));
+        disclist.add(new Disc("007","secret",12,"Tomorrow never dies"));
     }
 
     @Override
@@ -28,7 +36,7 @@ public class MediaServiceImpl implements MediaService {
         MediaServiceResult res = MediaServiceResult.Succes;
         if (bookList.contains(b)) {
             //TODO change status 
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.Duplicate;
             // Error code, already in List
             // Book not inserted,
         } else {
@@ -43,13 +51,16 @@ public class MediaServiceImpl implements MediaService {
         MediaServiceResult res = MediaServiceResult.Succes;
         if (disclist.contains(d)) {
             //TODO change status 
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.Duplicate;
             // Error code, already in List
             // Book not inserted,
         } else {
-            disclist.add(d);
+            boolean val = disclist.add(d);
+            System.out.println(val);
+            System.out.println(disclist.contains(d));
             res = MediaServiceResult.Succes;
-        }       
+        }
+
         return res;
     }
 
