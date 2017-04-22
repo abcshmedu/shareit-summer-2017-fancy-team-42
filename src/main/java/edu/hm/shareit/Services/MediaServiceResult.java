@@ -1,26 +1,36 @@
 package edu.hm.shareit.Services;
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 /**
- * Created by markus on 21.04.17.
+ * @author Markus Krahl
  */
 public enum MediaServiceResult {
-    Succes(200,Status.ACCEPTED);
+    Succes(200, Status.ACCEPTED);
     private int code;
     private Status state;
 
-    MediaServiceResult (int code, Status state){
+    /**
+     * 
+     * @param code int
+     * @param state Status
+     */
+    MediaServiceResult(int code, Status state) {
         this.code = code;
         this.state = state;
     }
-
-    int getCode(){
+    /**
+     * 
+     * @return int code
+     */
+    int getCode() {
         return code;
     }
-
-    Status getStatus(){
+    /**
+     * 
+     * @return Status
+     */
+    Status getStatus() {
         return state;
     }
 

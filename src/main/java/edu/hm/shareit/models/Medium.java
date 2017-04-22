@@ -14,28 +14,18 @@ public class Medium {
     public Medium(String title) {
         this.title = title;
     }
-    /**
-     * Equals method.
-     * @return boolean, is this object equal to other
-     * @param other Object to compare with
-     */
     //TODO
+    @Override
     public boolean equals(Object other) {
         return false;
     }
-    /**
-     * Hashfunction.
-     * @return int, the hashcode
-     */
     //TODO
+    @Override
     public int hashCode() {
         return 0;
     }
-    /**
-     * ToString representation.
-     * @return String representation of this object
-     */
     //TODO
+    @Override
     public String toString() {
         return "";
     }
