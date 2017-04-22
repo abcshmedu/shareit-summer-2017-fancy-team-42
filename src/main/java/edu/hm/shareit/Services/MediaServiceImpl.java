@@ -4,6 +4,7 @@ import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class MediaServiceImpl implements MediaService {
      * Constructor.
      */
     public MediaServiceImpl() {
-        bookList = new LinkedList<>();
-        disclist = new LinkedList<>();
+        bookList = new ArrayList<>();
+        disclist = new ArrayList<>();
 
         bookList.add(new Book("Peter Lustig", "1111", "Das Leben im Bauwagen"));
         bookList.add(new Book("Hans Müller","1112","Wie man als Müller lebt"));
@@ -55,9 +56,7 @@ public class MediaServiceImpl implements MediaService {
             // Error code, already in List
             // Book not inserted,
         } else {
-            boolean val = disclist.add(d);
-            System.out.println(val);
-            System.out.println(disclist.contains(d));
+            disclist.add(d);
             res = MediaServiceResult.Succes;
         }
 
