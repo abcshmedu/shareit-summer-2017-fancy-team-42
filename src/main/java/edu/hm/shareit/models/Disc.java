@@ -51,4 +51,19 @@ public class Disc extends Medium {
         return fsk;
     }
 
+    public boolean equals(Object other){
+        Disc d = null;
+        try{
+            d = (Disc) other;
+        }
+        catch (Exception e){
+            return false;
+        }
+        return this.getBarcode().equals(d.getBarcode());
+    }
+
+    public int hashCode(){
+        return this.getTitle().hashCode()+this.getBarcode().hashCode()+this.getDirector().hashCode()+this.getFsk();
+    }
+
 }

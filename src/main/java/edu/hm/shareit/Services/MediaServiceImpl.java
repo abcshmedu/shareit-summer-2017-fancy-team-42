@@ -13,16 +13,15 @@ import java.util.List;
  */
 public class MediaServiceImpl implements MediaService {
 
-    private List<Book> bookList;
-    private List<Disc> disclist;
+    private static List<Book> bookList = new LinkedList<>();
+    private static List<Disc> disclist = new LinkedList<>();
     
     /**
      * Constructor.
      */
     public MediaServiceImpl() {
-        bookList = new ArrayList<>();
-        disclist = new ArrayList<>();
 
+        /*
         bookList.add(new Book("Peter Lustig", "1111", "Das Leben im Bauwagen"));
         bookList.add(new Book("Hans Müller","1112","Wie man als Müller lebt"));
         bookList.add(new Book("Astrid Lindgren", "1113", "Kalle Blomquist"));
@@ -30,6 +29,7 @@ public class MediaServiceImpl implements MediaService {
         disclist.add(new Disc("0001","Steven Spielberg",12,"Indiana Jones"));
         disclist.add(new Disc("0002","George Lucas",6,"Star Wars Episode 4"));
         disclist.add(new Disc("007","secret",12,"Tomorrow never dies"));
+        */
     }
 
     @Override

@@ -38,6 +38,21 @@ public class Book extends Medium {
      */
     public String getIsbn() {
         return isbn;
-    }    
+    }
+
+    public boolean equals(Object other){
+        Book b = null;
+        try{
+            b = (Book) other;
+        }
+        catch (Exception e){
+            return false;
+        }
+        return this.getIsbn().equals(b.getIsbn());
+    }
+
+    public int hashCode(){
+        return this.getTitle().hashCode()+this.getIsbn().hashCode()+this.getIsbn().hashCode();
+    }
     
 }
