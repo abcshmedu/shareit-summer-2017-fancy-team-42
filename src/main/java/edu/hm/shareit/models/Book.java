@@ -40,19 +40,19 @@ public class Book extends Medium {
         return isbn;
     }
 
-    public boolean equals(Object other){
+    public boolean equals(Object other) {
         Book b = null;
-        try{
+        try {
             b = (Book) other;
         }
-        catch (Exception e){
+        catch (Exception e) {
             return false;
         }
         return this.getIsbn().equals(b.getIsbn());
     }
 
-    public int hashCode(){
-        return this.getTitle().hashCode()+this.getIsbn().hashCode()+this.getIsbn().hashCode();
+    public int hashCode() {
+        return this.getTitle().hashCode() + this.getIsbn().hashCode() + this.getIsbn().hashCode();
     }
     
 }

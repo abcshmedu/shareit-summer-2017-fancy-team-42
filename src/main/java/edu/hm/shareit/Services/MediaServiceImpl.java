@@ -4,7 +4,6 @@ import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public MediaServiceResult addBook(Book b) {
-        MediaServiceResult res = MediaServiceResult.Succes;
+        MediaServiceResult res = MediaServiceResult.SUCCESS;
         if (bookList.contains(b)) {
             //TODO change status 
             res = MediaServiceResult.Duplicate;
@@ -42,14 +41,14 @@ public class MediaServiceImpl implements MediaService {
             // Book not inserted,
         } else {
             bookList.add(b);
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.SUCCESS;
         }       
         return res;
     }
 
     @Override
     public MediaServiceResult addDisc(Disc d) {
-        MediaServiceResult res = MediaServiceResult.Succes;
+        MediaServiceResult res = MediaServiceResult.SUCCESS;
         if (disclist.contains(d)) {
             //TODO change status 
             res = MediaServiceResult.Duplicate;
@@ -57,7 +56,7 @@ public class MediaServiceImpl implements MediaService {
             // Book not inserted,
         } else {
             disclist.add(d);
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.SUCCESS;
         }
 
         return res;
@@ -65,38 +64,38 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public MediaServiceResult updateBook(Book b) {
-        MediaServiceResult res = MediaServiceResult.Succes;
-        int index = -1;
+        MediaServiceResult res = MediaServiceResult.SUCCESS;
+        int index = 0;
         for (int i = 0; i <= bookList.size() && !bookList.get(i).equals(b); i++) {
             index = i;
         }
         try {
             bookList.remove(index);
             bookList.add(b);
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.SUCCESS;
         } catch (ArrayIndexOutOfBoundsException e) {
             //could not update the book b, not in List
             //TODO change error code
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.SUCCESS;
         }      
         return res;
     }
 
     @Override
     public MediaServiceResult updateDisc(Disc d) {
-        MediaServiceResult res = MediaServiceResult.Succes;
-        int index = -1;
+        MediaServiceResult res = MediaServiceResult.SUCCESS;
+        int index = 0;
         for (int i = 0; i <= bookList.size() && !disclist.get(i).equals(d); i++) {
             index = i;
         }
         try {
             disclist.remove(index);
             disclist.add(d);
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.SUCCESS;
         } catch (ArrayIndexOutOfBoundsException e) {
             //could not update the book b, not in List
             //TODO change error code
-            res = MediaServiceResult.Succes;
+            res = MediaServiceResult.SUCCESS;
         }      
         return res;
     }

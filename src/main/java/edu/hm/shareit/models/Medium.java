@@ -18,10 +18,10 @@ public class Medium {
     @Override
     public boolean equals(Object other) {
         Medium m = null;
-        try{
+        try {
             m = (Medium) other;
         }
-        catch (Exception e){
+        catch (Exception e) {
             return false;
         }
         return this.getTitle().equals(m.getTitle());

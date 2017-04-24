@@ -13,7 +13,6 @@ import edu.hm.shareit.models.Medium;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -24,7 +23,7 @@ public class MediaResource {
 
     private MediaService ms;
 
-    public MediaResource(){
+    public MediaResource() {
         ms = new MediaServiceImpl();
     }
 
@@ -32,7 +31,7 @@ public class MediaResource {
     @GET
     @Path("/books")
     @Produces("application/json")
-    public Response getBooks(){
+    public Response getBooks() {
         Medium[] books = ms.getBooks();
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
@@ -52,13 +51,13 @@ public class MediaResource {
     @GET
     @Path("/books/{isbn}")
     @Produces("application/json")
-    public Response getISBNBook(@PathParam("isbn")String isbn){
+    public Response getISBNBook(@PathParam("isbn")String isbn) {
 
         Medium[] books = ms.getBooks();
         Book res = null;
-        for(int i = 0; i< books.length; i++){
+        for (int i = 0; i < books.length; i++) {
             Book b = (Book) books[i];
-            if(b.getIsbn().equals(isbn)){
+            if (b.getIsbn().equals(isbn)) {
                 i = books.length;
                 res = b;
             }
@@ -67,10 +66,10 @@ public class MediaResource {
         String json = "";
 
         try {
-            if(res != null){
+            if (res != null) {
                 json = mapper.writeValueAsString(res);
             }
-            else{
+            else {
                 json = "{\"Message\":\"Book with that ISBN does not exist.\"}";
             }
         } catch (JsonProcessingException e) {
@@ -87,7 +86,7 @@ public class MediaResource {
     @GET
     @Path("/discs")
     @Produces("application/json")
-    public Response getDiscs(){
+    public Response getDiscs() {
         Medium[] discs = ms.getDiscs();
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
@@ -107,12 +106,12 @@ public class MediaResource {
     @GET
     @Path("/discs/{barcode}")
     @Produces("application/json")
-    public Response getBarDisc(@PathParam("barcode")String code){
+    public Response getBarDisc(@PathParam("barcode")String code) {
         Medium[] discs = ms.getDiscs();
         Disc res = null;
-        for(int i = 0; i< discs.length; i++){
+        for (int i = 0; i < discs.length; i++) {
             Disc d = (Disc) discs[i];
-            if(d.getBarcode().equals(code)){
+            if (d.getBarcode().equals(code)) {
                 i = discs.length;
                 res = d;
             }
@@ -121,10 +120,10 @@ public class MediaResource {
         String json = "";
 
         try {
-            if(res != null){
+            if (res != null) {
                 json = mapper.writeValueAsString(res);
             }
-            else{
+            else {
                 json = "{\"Message\":\"Disc with that barcode does not exist.\"}";
             }
         } catch (JsonProcessingException e) {
@@ -140,7 +139,7 @@ public class MediaResource {
     @Path("/books")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response createBook(Book b){
+    public Response createBook(Book b) {
         MediaServiceResult res = ms.addBook(b);
         ObjectMapper mapper = new ObjectMapper();
         String json = "";
@@ -152,8 +151,8 @@ public class MediaResource {
         }
 
         return Response
-                .status(Response.Status.OK)
-                .entity(json)
+                .status(res.getCode())
+                .entity(res.getStatus())
                 .build();
     }
 
@@ -161,7 +160,7 @@ public class MediaResource {
     @Path("/discs")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response createDisc(Disc d){
+    public Response createDisc(Disc d) {
         MediaServiceResult res = ms.addDisc(d);
         ObjectMapper mapper = new ObjectMapper();
         String json = "";
@@ -173,8 +172,8 @@ public class MediaResource {
         }
 
         return Response
-                .status(Response.Status.OK)
-                .entity(json)
+                .status(res.getCode())
+                .entity(res.getStatus())
                 .build();
     }
 
@@ -182,12 +181,17 @@ public class MediaResource {
     @Path("/discs/{barcode}")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response changeDisc(@PathParam("barcode")String code){
-        JSONObject jsObj = new JSONObject();
-        jsObj.put("Disc verändert:", code);
+    public Response changeDisc(@PathParam("barcode")String code, Disc d) {
+        MediaServiceResult res;
+        if (code.equals(d.getBarcode())) {
+            res = ms.updateDisc(d);
+        }
+        else {
+            res = MediaServiceResult.Duplicate;
+        }
         return Response
-                .status(Response.Status.OK)
-                .entity(jsObj.toString())
+                .status(res.getCode())
+                .entity(res.getStatus())
                 .build();
     }
 
@@ -195,12 +199,17 @@ public class MediaResource {
     @Path("/books/{isbn}")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response changeBook(@PathParam("isbn")String isbn){
-        JSONObject jsObj = new JSONObject();
-        jsObj.put("Buch verändert:", isbn);
+    public Response changeBook(@PathParam("isbn")String isbn, Book b) {
+        MediaServiceResult res;
+        if (isbn.equals(b.getIsbn())) {
+            res = ms.updateBook(b);
+        }
+        else {
+            res = MediaServiceResult.Duplicate;
+        }
         return Response
-                .status(Response.Status.OK)
-                .entity(jsObj.toString())
+                .status(res.getCode())
+                .entity(res.getStatus())
                 .build();
     }
 
