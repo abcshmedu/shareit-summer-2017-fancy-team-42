@@ -35,7 +35,6 @@ public class MediaServiceImpl implements MediaService {
     public MediaServiceResult addBook(Book b) {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
         if (bookList.contains(b)) {
-            //TODO change status 
             res = MediaServiceResult.Duplicate;
             // Error code, already in List
             // Book not inserted,
@@ -50,7 +49,6 @@ public class MediaServiceImpl implements MediaService {
     public MediaServiceResult addDisc(Disc d) {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
         if (disclist.contains(d)) {
-            //TODO change status 
             res = MediaServiceResult.Duplicate;
             // Error code, already in List
             // Book not inserted,
@@ -75,7 +73,6 @@ public class MediaServiceImpl implements MediaService {
             res = MediaServiceResult.SUCCESS;
         } catch (ArrayIndexOutOfBoundsException e) {
             //could not update the book b, not in List
-            //TODO change error code
             res = MediaServiceResult.SUCCESS;
         }      
         return res;
@@ -84,11 +81,12 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public MediaServiceResult updateDisc(Disc d) {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
-        int index = 0;
-        for (int i = 0; i <= bookList.size() && !disclist.get(i).equals(d); i++) {
-            index = i;
-        }
+        int index = -1;
         try {
+            for (int i = 0; i <= bookList.size() && !disclist.get(i).equals(d); i++) {
+                index = i;
+            }
+
             disclist.remove(index);
             disclist.add(d);
             res = MediaServiceResult.SUCCESS;
