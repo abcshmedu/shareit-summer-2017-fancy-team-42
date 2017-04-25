@@ -34,7 +34,7 @@ public class Medium {
     //TODO
     @Override
     public String toString() {
-        return "Medim mit dem Titel: " + this.getTitle();
+        return "Medium mit dem Titel: " + this.getTitle();
     }
     /**
      * 

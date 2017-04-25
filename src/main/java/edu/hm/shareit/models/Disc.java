@@ -50,7 +50,7 @@ public class Disc extends Medium {
     public int getFsk() {
         return fsk;
     }
-
+    @Override
     public boolean equals(Object other) {
         Disc d = null;
         try {
@@ -61,7 +61,7 @@ public class Disc extends Medium {
         }
         return this.getBarcode().equals(d.getBarcode());
     }
-
+    @Override
     public int hashCode() {
         return this.getTitle().hashCode() + this.getBarcode().hashCode() + this.getDirector().hashCode() + this.getFsk();
     }

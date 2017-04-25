@@ -35,9 +35,7 @@ public class MediaServiceImpl implements MediaService {
     public MediaServiceResult addBook(Book b) {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
         if (bookList.contains(b)) {
-            res = MediaServiceResult.Duplicate;
-            // Error code, already in List
-            // Book not inserted,
+            res = MediaServiceResult.DUPLICATE;
         } else {
             bookList.add(b);
             res = MediaServiceResult.SUCCESS;
@@ -49,9 +47,7 @@ public class MediaServiceImpl implements MediaService {
     public MediaServiceResult addDisc(Disc d) {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
         if (disclist.contains(d)) {
-            res = MediaServiceResult.Duplicate;
-            // Error code, already in List
-            // Book not inserted,
+            res = MediaServiceResult.DUPLICATE;
         } else {
             disclist.add(d);
             res = MediaServiceResult.SUCCESS;
@@ -76,7 +72,7 @@ public class MediaServiceImpl implements MediaService {
             res = MediaServiceResult.SUCCESS;
         }
         else {
-            res = MediaServiceResult.Duplicate;
+            res = MediaServiceResult.ERROR;
         }
         return res;
     }
@@ -97,18 +93,18 @@ public class MediaServiceImpl implements MediaService {
             res = MediaServiceResult.SUCCESS;
         }
         else {
-            res = MediaServiceResult.Duplicate;
+            res = MediaServiceResult.ERROR;
         }
         return res;
     }
 
     @Override
     public Medium[] getBooks() {
-        return this.bookList.toArray(new Medium[bookList.size()]);
+        return MediaServiceImpl.bookList.toArray(new Medium[bookList.size()]);
     }
 
     @Override
     public Medium[] getDiscs() {
-        return this.disclist.toArray(new Medium[disclist.size()]);
+        return MediaServiceImpl.disclist.toArray(new Medium[disclist.size()]);
     }
 }

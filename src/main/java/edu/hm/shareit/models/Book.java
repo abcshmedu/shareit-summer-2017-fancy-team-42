@@ -39,7 +39,7 @@ public class Book extends Medium {
     public String getIsbn() {
         return isbn;
     }
-
+    @Override
     public boolean equals(Object other) {
         Book b = null;
         try {
@@ -50,9 +50,9 @@ public class Book extends Medium {
         }
         return this.getIsbn().equals(b.getIsbn());
     }
-
+    @Override
     public int hashCode() {
-        return this.getTitle().hashCode() + this.getIsbn().hashCode() + this.getIsbn().hashCode();
+        return this.getTitle().hashCode() + this.getIsbn().hashCode() + this.getAuthor().hashCode();
     }
     
 }

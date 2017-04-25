@@ -10,7 +10,6 @@ import edu.hm.shareit.Services.MediaServiceResult;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
-import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -23,11 +22,18 @@ public class MediaResource {
 
     private MediaService ms;
 
+    /**
+     * Constructor of class.
+     */
     public MediaResource() {
         ms = new MediaServiceImpl();
     }
 
 
+    /**
+     * Returns all saved books.
+     * @return Response with status
+     */
     @GET
     @Path("/books")
     @Produces("application/json")
@@ -48,6 +54,11 @@ public class MediaResource {
                 .build();
     }
 
+    /**
+     * Search for a book.
+     * @return Response with status
+     * @param isbn String, isbn to search for
+     */
     @GET
     @Path("/books/{isbn}")
     @Produces("application/json")
@@ -83,6 +94,10 @@ public class MediaResource {
                 .build();
     }
 
+    /**
+     * Returns all saved Discs.
+     * @return Response with status
+     */
     @GET
     @Path("/discs")
     @Produces("application/json")
@@ -103,6 +118,11 @@ public class MediaResource {
                 .build();
     }
 
+    /**
+     * Search for a Disc.
+     * @return Response with status
+     * @param code String, code to search for
+     */
     @GET
     @Path("/discs/{barcode}")
     @Produces("application/json")
@@ -135,6 +155,11 @@ public class MediaResource {
                 .build();
     }
 
+    /**
+     * Insert a new book to the list.
+     * @param b the new book
+     * @return Response with status
+     */
     @POST
     @Path("/books")
     @Produces("application/json")
@@ -155,7 +180,12 @@ public class MediaResource {
                 .entity(res.getStatus())
                 .build();
     }
-
+    
+    /**
+     * Insert a new disc to the list.
+     * @param d the new disc
+     * @return Response with status
+     */
     @POST
     @Path("/discs")
     @Produces("application/json")
@@ -177,6 +207,12 @@ public class MediaResource {
                 .build();
     }
 
+    /**
+     * Change a disc.
+     * @param code The code of the disc we want to change
+     * @param d the changed disc
+     * @return Response with status
+     */
     @PUT
     @Path("/discs/{barcode}")
     @Produces("application/json")
@@ -187,7 +223,7 @@ public class MediaResource {
             res = ms.updateDisc(d);
         }
         else {
-            res = MediaServiceResult.Duplicate;
+            res = MediaServiceResult.ERROR;
         }
         return Response
                 .status(res.getCode())
@@ -195,6 +231,12 @@ public class MediaResource {
                 .build();
     }
 
+    /**
+     * Change a book.
+     * @param isbn The isbn of the book we want to change
+     * @param b the changed book
+     * @return Response with status
+     */
     @PUT
     @Path("/books/{isbn}")
     @Produces("application/json")
@@ -205,7 +247,7 @@ public class MediaResource {
             res = ms.updateBook(b);
         }
         else {
-            res = MediaServiceResult.Duplicate;
+            res = MediaServiceResult.ERROR;
         }
         return Response
                 .status(res.getCode())
