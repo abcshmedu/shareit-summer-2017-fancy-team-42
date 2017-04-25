@@ -83,7 +83,7 @@ public class MediaServiceImpl implements MediaService {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
         int index = -1;
         try {
-            for (int i = 0; i <= bookList.size() && !disclist.get(i).equals(d); i++) {
+            for (int i = 0; i <= disclist.size() && !disclist.get(i).equals(d); i++) {
                 index = i;
             }
 
@@ -93,7 +93,7 @@ public class MediaServiceImpl implements MediaService {
         } catch (ArrayIndexOutOfBoundsException e) {
             //could not update the book b, not in List
             //TODO change error code
-            res = MediaServiceResult.SUCCESS;
+            res = MediaServiceResult.Duplicate;
         }      
         return res;
     }
