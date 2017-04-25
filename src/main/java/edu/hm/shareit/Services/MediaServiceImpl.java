@@ -20,15 +20,6 @@ public class MediaServiceImpl implements MediaService {
      */
     public MediaServiceImpl() {
 
-        /*
-        bookList.add(new Book("Peter Lustig", "1111", "Das Leben im Bauwagen"));
-        bookList.add(new Book("Hans Müller","1112","Wie man als Müller lebt"));
-        bookList.add(new Book("Astrid Lindgren", "1113", "Kalle Blomquist"));
-
-        disclist.add(new Disc("0001","Steven Spielberg",12,"Indiana Jones"));
-        disclist.add(new Disc("0002","George Lucas",6,"Star Wars Episode 4"));
-        disclist.add(new Disc("007","secret",12,"Tomorrow never dies"));
-        */
     }
 
     @Override
@@ -135,7 +126,7 @@ public class MediaServiceImpl implements MediaService {
     /**
      * Private method, that checks if the isbn is correct.
      * @param isbn String
-     * @return boolean, checkISBN
+     * @return boolean, result of ISBN check
      */
     private boolean checkISBN(String isbn) {
         return true;
@@ -144,7 +135,7 @@ public class MediaServiceImpl implements MediaService {
     /**
      * Private method that checks if the code is correct.
      * @param code String
-     * @return boolean, checkBarcode
+     * @return boolean, result of Barcode check
      */
     private boolean checkBarcode(String code) {
         return true;
