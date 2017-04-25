@@ -63,18 +63,21 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public MediaServiceResult updateBook(Book b) {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
-        int index = 0;
-        for (int i = 0; i <= bookList.size() && !bookList.get(i).equals(b); i++) {
-            index = i;
+        int index = -1;
+        for (int i = 0; i < bookList.size(); i++) {
+            if (bookList.get(i).equals(b)) {
+                index = i;
+                i = bookList.size();
+            }
         }
-        try {
+        if (index > -1) {
             bookList.remove(index);
             bookList.add(b);
             res = MediaServiceResult.SUCCESS;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //could not update the book b, not in List
-            res = MediaServiceResult.SUCCESS;
-        }      
+        }
+        else {
+            res = MediaServiceResult.Duplicate;
+        }
         return res;
     }
 
@@ -82,19 +85,20 @@ public class MediaServiceImpl implements MediaService {
     public MediaServiceResult updateDisc(Disc d) {
         MediaServiceResult res = MediaServiceResult.SUCCESS;
         int index = -1;
-        try {
-            for (int i = 0; i <= disclist.size() && !disclist.get(i).equals(d); i++) {
+        for (int i = 0; i < disclist.size(); i++) {
+            if (disclist.get(i).equals(d)) {
                 index = i;
+                i = disclist.size();
             }
-
+        }
+        if (index > -1) {
             disclist.remove(index);
             disclist.add(d);
             res = MediaServiceResult.SUCCESS;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //could not update the book b, not in List
-            //TODO change error code
+        }
+        else {
             res = MediaServiceResult.Duplicate;
-        }      
+        }
         return res;
     }
 
