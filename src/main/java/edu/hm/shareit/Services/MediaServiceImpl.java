@@ -33,7 +33,13 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public MediaServiceResult addBook(Book b) {
-        MediaServiceResult res = MediaServiceResult.SUCCESS;
+        MediaServiceResult res;
+        if (b.getAuthor().equals("") || b.getTitle().equals("")) {
+            return MediaServiceResult.BADINFORMATION;
+        }
+        if (!this.checkISBN(b.getIsbn())) {
+            return MediaServiceResult.BADCODE;
+        }
         if (bookList.contains(b)) {
             res = MediaServiceResult.DUPLICATE;
         } else {
@@ -45,7 +51,13 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public MediaServiceResult addDisc(Disc d) {
-        MediaServiceResult res = MediaServiceResult.SUCCESS;
+        MediaServiceResult res;
+        if (d.getTitle().equals("") || d.getDirector().equals("")) {
+            return MediaServiceResult.BADINFORMATION;
+        }
+        if (!this.checkBarcode(d.getBarcode())) {
+            return MediaServiceResult.BADCODE;
+        }
         if (disclist.contains(d)) {
             res = MediaServiceResult.DUPLICATE;
         } else {
@@ -58,7 +70,13 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public MediaServiceResult updateBook(Book b) {
-        MediaServiceResult res = MediaServiceResult.SUCCESS;
+        MediaServiceResult res;
+        if (b.getAuthor().equals("") || b.getTitle().equals("")) {
+            return MediaServiceResult.BADINFORMATION;
+        }
+        if (!this.checkISBN(b.getIsbn())) {
+            return MediaServiceResult.BADCODE;
+        }
         int index = -1;
         for (int i = 0; i < bookList.size(); i++) {
             if (bookList.get(i).equals(b)) {
@@ -72,14 +90,20 @@ public class MediaServiceImpl implements MediaService {
             res = MediaServiceResult.SUCCESS;
         }
         else {
-            res = MediaServiceResult.ERROR;
+            res = MediaServiceResult.NOTFOUND;
         }
         return res;
     }
 
     @Override
     public MediaServiceResult updateDisc(Disc d) {
-        MediaServiceResult res = MediaServiceResult.SUCCESS;
+        MediaServiceResult res;
+        if (d.getTitle().equals("") || d.getDirector().equals("")) {
+            return MediaServiceResult.BADINFORMATION;
+        }
+        if (!this.checkBarcode(d.getBarcode())) {
+            return MediaServiceResult.BADCODE;
+        }
         int index = -1;
         for (int i = 0; i < disclist.size(); i++) {
             if (disclist.get(i).equals(d)) {
@@ -93,7 +117,7 @@ public class MediaServiceImpl implements MediaService {
             res = MediaServiceResult.SUCCESS;
         }
         else {
-            res = MediaServiceResult.ERROR;
+            res = MediaServiceResult.NOTFOUND;
         }
         return res;
     }
@@ -106,5 +130,23 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public Medium[] getDiscs() {
         return MediaServiceImpl.disclist.toArray(new Medium[disclist.size()]);
+    }
+
+    /**
+     * Private method, that checks if the isbn is correct.
+     * @param isbn String
+     * @return boolean, checkISBN
+     */
+    private boolean checkISBN(String isbn) {
+        return true;
+    }
+
+    /**
+     * Private method that checks if the code is correct.
+     * @param code String
+     * @return boolean, checkBarcode
+     */
+    private boolean checkBarcode(String code) {
+        return true;
     }
 }

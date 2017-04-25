@@ -16,6 +16,9 @@ import javax.ws.rs.core.Response;
 
 /**
  * Created by Markus Krahl on 21.04.17.
+ * That class is responsible for all requests.
+ * Important is the URI-pattern-matching.
+ * Each annotation can be related to a part of an URI-request
  */
 @Path("/media")
 public class MediaResource {
@@ -45,7 +48,7 @@ public class MediaResource {
         try {
             json = mapper.writeValueAsString(books);
         } catch (JsonProcessingException e) {
-            json = "{\"Message\":\"Error in showing list\"}";
+            json = MediaServiceResult.ERROR.getStatus();
         }
 
         return Response
@@ -81,10 +84,10 @@ public class MediaResource {
                 json = mapper.writeValueAsString(res);
             }
             else {
-                json = "{\"Message\":\"Book with that ISBN does not exist.\"}";
+                json = MediaServiceResult.NOTFOUND.getStatus();
             }
         } catch (JsonProcessingException e) {
-            json = "{\"Message\":\"Error in showing list\"}";
+            json = MediaServiceResult.ERROR.getStatus();
         }
 
 
@@ -109,7 +112,7 @@ public class MediaResource {
         try {
             json = mapper.writeValueAsString(discs);
         } catch (JsonProcessingException e) {
-            json = "{\"Message\":\"Error in showing list\"}";
+            json = MediaServiceResult.ERROR.getStatus();
         }
 
         return Response
@@ -144,10 +147,10 @@ public class MediaResource {
                 json = mapper.writeValueAsString(res);
             }
             else {
-                json = "{\"Message\":\"Disc with that barcode does not exist.\"}";
+                json = MediaServiceResult.NOTFOUND.getStatus();
             }
         } catch (JsonProcessingException e) {
-            json = "{\"Message\":\"Error in showing list\"}";
+            json = MediaServiceResult.ERROR.getStatus();
         }
         return Response
                 .status(Response.Status.OK)
@@ -166,14 +169,6 @@ public class MediaResource {
     @Consumes("application/json")
     public Response createBook(Book b) {
         MediaServiceResult res = ms.addBook(b);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = "";
-
-        try {
-            json = mapper.writeValueAsString(res);
-        } catch (JsonProcessingException e) {
-            json = "{\"Message\":\"Error in state result\"}";
-        }
 
         return Response
                 .status(res.getCode())
@@ -192,14 +187,6 @@ public class MediaResource {
     @Consumes("application/json")
     public Response createDisc(Disc d) {
         MediaServiceResult res = ms.addDisc(d);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = "";
-
-        try {
-            json = mapper.writeValueAsString(res);
-        } catch (JsonProcessingException e) {
-            json = "{\"Message\":\"Error in state result\"}";
-        }
 
         return Response
                 .status(res.getCode())
@@ -223,7 +210,7 @@ public class MediaResource {
             res = ms.updateDisc(d);
         }
         else {
-            res = MediaServiceResult.ERROR;
+            res = MediaServiceResult.BADREQUEST;
         }
         return Response
                 .status(res.getCode())
@@ -247,7 +234,7 @@ public class MediaResource {
             res = ms.updateBook(b);
         }
         else {
-            res = MediaServiceResult.ERROR;
+            res = MediaServiceResult.BADREQUEST;
         }
         return Response
                 .status(res.getCode())
