@@ -44,5 +44,11 @@ public interface MediaService {
      */
     Medium[] getDiscs();
 
+    /**
+     *
+     * @return MediaServiceResult
+     */
+    MediaServiceResult deleteLists();
+
 
 }

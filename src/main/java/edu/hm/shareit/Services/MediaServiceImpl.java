@@ -124,6 +124,16 @@ public class MediaServiceImpl implements MediaService {
     }
 
     /**
+     * Help-method only provided for test-cases. Do not use the method in the program.
+     * @return Status whether list clearing was successful
+     */
+    public MediaServiceResult deleteLists() {
+        disclist.clear();
+        bookList.clear();
+        return MediaServiceResult.SUCCESS;
+    }
+
+    /**
      * Private method, that checks if the isbn is correct.
      * @param isbn String
      * @return boolean, result of ISBN check

@@ -242,4 +242,19 @@ public class MediaResource {
                 .build();
     }
 
+    /**
+     * Deletes all lists.
+     * @return Response with status.
+     */
+    @GET
+    @Path("/remove")
+    @Produces("application/json")
+    public Response delAll() {
+        MediaServiceResult res = ms.deleteLists();
+        return Response
+                .status(res.getCode())
+                .entity(res.getStatus())
+                .build();
+    }
+
 }
