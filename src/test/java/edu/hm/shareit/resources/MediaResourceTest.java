@@ -1,4 +1,4 @@
-package edu.hm.shareit.resource;
+package edu.hm.shareit.resources;
 
 
 import static org.junit.Assert.assertTrue;
@@ -13,7 +13,6 @@ import org.junit.Test;
 import edu.hm.shareit.Services.MediaServiceResult;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
-import edu.hm.shareit.resources.MediaResource;
 
 /**
  * Tests for the MediaRessource-class.
