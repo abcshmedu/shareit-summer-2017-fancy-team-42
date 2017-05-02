@@ -139,7 +139,48 @@ public class MediaServiceImpl implements MediaService {
      * @return boolean, result of ISBN check
      */
     private boolean checkISBN(String isbn) {
-        return true;
+        final int length1 = 10;
+        final int length2 = 13;
+        final int xNumber = 10;
+        final int modNumber = 10;
+        final int multStart = 3;
+        if (isbn.length() == length1) {
+            int sum = 0;
+            for (int i = 1; i < isbn.length(); i++) {
+                sum += Character.getNumericValue(isbn.charAt(i - 1)) * i;
+            }
+            final int mod = 11;
+            int check = sum % mod;
+            char lastNumber = isbn.charAt(isbn.length() - 1);
+
+            if (lastNumber == 'X') {
+                return check == xNumber;
+            }
+            else {
+                return check == Character.getNumericValue(lastNumber);
+            }
+
+        }
+        else if (isbn.length() == length2) {
+            int sum = 0;
+            int multiplier = multStart;
+
+            for (int i = isbn.length() - 2; i > -1; i--) {
+                sum += Character.getNumericValue(isbn.charAt(i)) * multiplier;
+                if (multiplier == multStart) {
+                    multiplier = 1;
+                }
+                else {
+                    multiplier = multStart;
+                }
+            }
+            int check = modNumber - (sum % modNumber);
+            int lastNumber = Character.getNumericValue(isbn.charAt(isbn.length() - 1));
+            return check == lastNumber;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -148,6 +189,28 @@ public class MediaServiceImpl implements MediaService {
      * @return boolean, result of Barcode check
      */
     private boolean checkBarcode(String code) {
-        return true;
+        final int length1 = 8;
+        final int length2 = 13;
+        final int multStart = 3;
+        final int modNumb = 10;
+
+        if (code.length() != length1 && code.length() != length2) {
+            return false;
+        }
+
+        int sum = 0;
+        int multiplier = multStart;
+        for (int i = code.length() - 2; i > -1; i--) {
+            sum += (Character.getNumericValue(code.charAt(i))) * multiplier;
+            if (multiplier == multStart) {
+                multiplier = 1;
+            }
+            else {
+                multiplier = multStart;
+            }
+        }
+        int check = modNumb - (sum % modNumb);
+        int lastNumber = Character.getNumericValue(code.charAt(code.length() - 1));
+        return check == lastNumber;
     }
 }
