@@ -206,8 +206,7 @@ public class MediaResourceTest {
         res = medRes.getBooks();
         assertTrue(res.getEntity().equals(json));
     }
-    
-    //TODO need to implement, problem because of missing delete possibility.
+
     /**
      * Check if the discs were returned correctly.
      * @throws Exception 
