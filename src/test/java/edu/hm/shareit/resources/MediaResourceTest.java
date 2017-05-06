@@ -29,9 +29,12 @@ public class MediaResourceTest {
     public void setUp() {
         medRes = new MediaResource();
     }
-
+    
+    /**
+     * Clear resources.
+     */
     @After
-    public void clearUp(){
+    public void clearUp() {
         medRes.delAll();
     }
 
@@ -45,10 +48,14 @@ public class MediaResourceTest {
         Book b = new Book("Mustermann", "9783065210201", "Title");
         Response res = medRes.createBook(b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
+        
+        b = new Book("Mustermann", "0198526636", "Title");
+        res = medRes.createBook(b);
+        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
     }
     
     /**
-     * Insert a valid disc.
+     * Insert valid discs.
      * @throws Exception 
      */
     @Test
@@ -56,7 +63,7 @@ public class MediaResourceTest {
         final int fsk = 6;
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
         Response res = medRes.createDisc(d);
-        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
+        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());      
     }
     
     /**
@@ -161,7 +168,7 @@ public class MediaResourceTest {
     @Test
     public void getBookIsbnTest() throws Exception {
         String isbn = "9783127323207";
-        Book b = new Book("Ian Flemming",isbn,"Casino Royal");
+        Book b = new Book("Ian Flemming", isbn, "Casino Royal");
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(b);
         Response res = medRes.createBook(b);
@@ -196,12 +203,12 @@ public class MediaResourceTest {
         String start = "[]";
         Response res = medRes.getBooks();
         assertTrue(res.getEntity().equals(start));
-        Book b1 = new Book("Ian Flemming","9783127323207","Casino Royal");
-        Book b2 = new Book("Ian Flemming","9783065210201","Goldeneye");
+        Book b1 = new Book("Ian Flemming", "9783127323207", "Casino Royal");
+        Book b2 = new Book("Ian Flemming", "9783065210201", "Goldeneye");
         medRes.createBook(b1);
         medRes.createBook(b2);
         ObjectMapper mapper = new ObjectMapper();
-        String json ="["+ mapper.writeValueAsString(b1)+","+mapper.writeValueAsString(b2)+"]";
+        String json = "[" + mapper.writeValueAsString(b1) + "," + mapper.writeValueAsString(b2) + "]";
         res = medRes.getBooks();
         assertTrue(res.getEntity().equals(json));
     }
@@ -213,22 +220,28 @@ public class MediaResourceTest {
     @Test
     public void getDiscsTest() throws Exception {
         String start = "[]";
+        final int fsk = 12;
         Response res = medRes.getDiscs();
         assertTrue(res.getEntity().equals(start));
-        Disc d1 = new Disc("5449000096241","Ian Flemming",12,"Casino Royal");
-        Disc d2 = new Disc("5030917105081","Ian Flemming",12,"Goldeneye");
-        Response res1 = medRes.createDisc(d1);
-        Response res2 = medRes.createDisc(d2);
+        Disc d1 = new Disc("5449000096241", "Ian Flemming", fsk, "Casino Royal");
+        Disc d2 = new Disc("5030917105081", "Ian Flemming", fsk, "Goldeneye");
+        medRes.createDisc(d1);
+        medRes.createDisc(d2);
         ObjectMapper mapper = new ObjectMapper();
-        String json ="["+ mapper.writeValueAsString(d1)+","+mapper.writeValueAsString(d2)+"]";
+        String json = "[" + mapper.writeValueAsString(d1) + "," + mapper.writeValueAsString(d2) + "]";
         res = medRes.getDiscs();
         assertTrue(res.getEntity().equals(json));
     }
 
+    /**
+     * Test for delete method.
+     * @throws Exception 
+     */
     @Test
-    public void delAllTest() throws Exception{
-        Disc d = new Disc("5449000096241","Steven Spielberg",12,"Indiana Jones");
-        Book b = new Book("Ian Flemming","9783065210201","Casino Royal");
+    public void delAllTest() throws Exception {
+        final int fsk = 12;
+        Disc d = new Disc("5449000096241", "Steven Spielberg", fsk, "Indiana Jones");
+        Book b = new Book("Ian Flemming", "9783065210201", "Casino Royal");
 
         medRes.createBook(b);
         medRes.createDisc(d);
@@ -236,6 +249,6 @@ public class MediaResourceTest {
         Response res1 = medRes.createBook(b);
         Response res2 = medRes.createDisc(d);
 
-        assertTrue(MediaServiceResult.SUCCESS.getStatus()==res.getEntity() && MediaServiceResult.SUCCESS.getStatus() == res1.getEntity() && MediaServiceResult.SUCCESS.getStatus()==res2.getEntity());
+        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity() && MediaServiceResult.SUCCESS.getStatus() == res1.getEntity() && MediaServiceResult.SUCCESS.getStatus() == res2.getEntity());
     }
 }
