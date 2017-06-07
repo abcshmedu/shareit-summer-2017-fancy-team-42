@@ -1,14 +1,17 @@
 package edu.hm.shareit.Services;
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientResponse;
-import sun.net.www.http.HttpClient;
+import org.json.JSONObject;
 
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
@@ -22,6 +25,8 @@ public class MediaServiceImpl implements MediaService {
 
     private static List<Book> bookList = new LinkedList<>();
     private static List<Disc> disclist = new LinkedList<>();
+
+    private static final String authServiceLink = "http://localhost:8083/authenticate/auth/valid";
     
     /**
      * Constructor.
@@ -223,8 +228,17 @@ public class MediaServiceImpl implements MediaService {
     }
 
     public String getJWTCookie(String token) {
+        System.out.println(token);
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource webResource = client.resource(UriBuilder.fromUri(authServiceLink).build());
+        JSONObject body = new JSONObject();
+        body.put("token", token);
+        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, body.toString());
+        String result = response.getEntity(String.class);
 
 
-        return token;
+
+        return result;
     }
 }
