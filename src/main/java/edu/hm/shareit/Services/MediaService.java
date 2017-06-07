@@ -50,5 +50,10 @@ public interface MediaService {
      */
     MediaServiceResult deleteLists();
 
-
+    /**
+     *
+     * @param token String
+     * @return String
+     */
+    String getJWTCookie(String token);
 }

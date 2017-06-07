@@ -12,6 +12,7 @@ import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Response;
 
 /**
@@ -24,6 +25,7 @@ import javax.ws.rs.core.Response;
 public class MediaResource {
 
     private MediaService ms;
+    private static final String CookieName = "Token";
 
     /**
      * Constructor of class.
@@ -35,12 +37,21 @@ public class MediaResource {
 
     /**
      * Returns all saved books.
+     * @param token Cookie, token is saved in cookie
      * @return Response with status
      */
     @GET
     @Path("/books")
     @Produces("application/json")
-    public Response getBooks() {
+    public Response getBooks(@CookieParam(CookieName) Cookie token) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         Medium[] books = ms.getBooks();
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
@@ -65,7 +76,14 @@ public class MediaResource {
     @GET
     @Path("/books/{isbn}")
     @Produces("application/json")
-    public Response getISBNBook(@PathParam("isbn")String isbn) {
+    public Response getISBNBook(@CookieParam(CookieName) Cookie token, @PathParam("isbn")String isbn) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
 
         Medium[] books = ms.getBooks();
         Book res = null;
@@ -104,7 +122,15 @@ public class MediaResource {
     @GET
     @Path("/discs")
     @Produces("application/json")
-    public Response getDiscs() {
+    public Response getDiscs(@CookieParam(CookieName) Cookie token) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         Medium[] discs = ms.getDiscs();
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
@@ -129,7 +155,15 @@ public class MediaResource {
     @GET
     @Path("/discs/{barcode}")
     @Produces("application/json")
-    public Response getBarDisc(@PathParam("barcode")String code) {
+    public Response getBarDisc(@CookieParam(CookieName) Cookie token, @PathParam("barcode")String code) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         Medium[] discs = ms.getDiscs();
         Disc res = null;
         for (int i = 0; i < discs.length; i++) {
@@ -167,7 +201,15 @@ public class MediaResource {
     @Path("/books")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response createBook(Book b) {
+    public Response createBook(@CookieParam(CookieName) Cookie token, Book b) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         MediaServiceResult res = ms.addBook(b);
 
         return Response
@@ -185,7 +227,15 @@ public class MediaResource {
     @Path("/discs")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response createDisc(Disc d) {
+    public Response createDisc(@CookieParam(CookieName) Cookie token, Disc d) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         MediaServiceResult res = ms.addDisc(d);
 
         return Response
@@ -204,7 +254,15 @@ public class MediaResource {
     @Path("/discs/{barcode}")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response changeDisc(@PathParam("barcode")String code, Disc d) {
+    public Response changeDisc(@CookieParam(CookieName) Cookie token, @PathParam("barcode")String code, Disc d) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         MediaServiceResult res;
         if (code.equals(d.getBarcode())) {
             res = ms.updateDisc(d);
@@ -228,7 +286,15 @@ public class MediaResource {
     @Path("/books/{isbn}")
     @Produces("application/json")
     @Consumes("application/json")
-    public Response changeBook(@PathParam("isbn")String isbn, Book b) {
+    public Response changeBook(@CookieParam(CookieName) Cookie token, @PathParam("isbn")String isbn, Book b) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         MediaServiceResult res;
         if (isbn.equals(b.getIsbn())) {
             res = ms.updateBook(b);
@@ -249,7 +315,15 @@ public class MediaResource {
     @GET
     @Path("/remove")
     @Produces("application/json")
-    public Response delAll() {
+    public Response delAll(@CookieParam(CookieName) Cookie token) {
+        String jwt = ms.getJWTCookie(token.getValue());
+        if (jwt == null) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\";\"You are not authorized.\"}")
+                    .build();
+        }
+
         MediaServiceResult res = ms.deleteLists();
         return Response
                 .status(res.getCode())

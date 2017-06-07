@@ -3,7 +3,15 @@ package edu.hm.shareit.Services;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientResponse;
+import sun.net.www.http.HttpClient;
 
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -212,5 +220,11 @@ public class MediaServiceImpl implements MediaService {
         int check = modNumb - (sum % modNumb);
         int lastNumber = Character.getNumericValue(code.charAt(code.length() - 1));
         return check == lastNumber;
+    }
+
+    public String getJWTCookie(String token) {
+
+
+        return token;
     }
 }
