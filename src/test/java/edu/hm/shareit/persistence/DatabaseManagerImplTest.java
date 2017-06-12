@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.hm.shareit.models.Book;
@@ -43,13 +44,11 @@ public class DatabaseManagerImplTest {
         if (!books.isEmpty()) {
             for (Iterator<Book> it = books.iterator(); it.hasNext();) {
                 manager.deleteBook(it.next());
-                System.out.println("Deleted one Book");
             }
         }
         if (!discs.isEmpty()) {
             for (Iterator<Disc> it = discs.iterator(); it.hasNext();) {
                 manager.deleteDisc(it.next());
-                System.out.println("Deleted one Disc");
             }
         }
     }
@@ -195,5 +194,24 @@ public class DatabaseManagerImplTest {
         final int fsk = 12;
         Disc disc1 = new Disc("III", "Markus2", fsk, "Wrong Turn2");
         manager.updateDisc(disc1);
+    }
+    
+    /**
+     * @throws DuplicateException 
+     * 
+     */
+    @Ignore
+    @Test
+    public void deleteAllTest() throws DuplicateException {
+        final int fsk = 12;
+        Disc disc1 = new Disc("III", "Markus2", fsk, "Wrong Turn2");
+        manager.insertDisc(disc1); 
+        Book book1 = new Book("Autor", "12345", "Test titile");
+        manager.insertBook(book1);
+        
+        manager.deleteAll();
+        
+        assertTrue(manager.getAllBooks().isEmpty());
+        assertTrue(manager.getAllDiscs().isEmpty());
     }
 }

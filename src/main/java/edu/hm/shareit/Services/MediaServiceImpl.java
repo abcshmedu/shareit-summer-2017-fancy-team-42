@@ -5,34 +5,39 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
+import edu.hm.shareit.persistence.DatabaseManager;
+import edu.hm.shareit.persistence.DatabaseManagerImpl.DuplicateException;
+import edu.hm.shareit.persistence.DatabaseManagerImpl.MediaNotFoundException;
+
 import org.json.JSONObject;
 
-
+import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by markus on 21.04.17.
+ * Created by Markus Krahl, Thomas Murschallon 21.04.17.
  */
 public class MediaServiceImpl implements MediaService {
 
     private static List<Book> bookList = new LinkedList<>();
     private static List<Disc> disclist = new LinkedList<>();
-
+    
+    private DatabaseManager dbMan;
+    
     private static final String authServiceLink = "http://localhost:8083/authenticate/auth/valid";
     
     /**
      * Constructor.
      */
-    public MediaServiceImpl() {
-
+    @Inject
+    public MediaServiceImpl(DatabaseManager dbMan) {
+        this.dbMan = dbMan;
     }
 
     @Override
@@ -44,12 +49,12 @@ public class MediaServiceImpl implements MediaService {
         if (!this.checkISBN(b.getIsbn())) {
             return MediaServiceResult.BADCODE;
         }
-        if (bookList.contains(b)) {
-            res = MediaServiceResult.DUPLICATE;
-        } else {
-            bookList.add(b);
+        try {
+            dbMan.insertBook(b);
             res = MediaServiceResult.SUCCESS;
-        }       
+        } catch (DuplicateException e) {
+            res = MediaServiceResult.DUPLICATE;
+        }      
         return res;
     }
 
@@ -62,12 +67,12 @@ public class MediaServiceImpl implements MediaService {
         if (!this.checkBarcode(d.getBarcode())) {
             return MediaServiceResult.BADCODE;
         }
-        if (disclist.contains(d)) {
-            res = MediaServiceResult.DUPLICATE;
-        } else {
-            disclist.add(d);
+        try {
+            dbMan.insertDisc(d);
             res = MediaServiceResult.SUCCESS;
-        }
+        } catch (DuplicateException e) {
+            res = MediaServiceResult.DUPLICATE;
+        }     
 
         return res;
     }
@@ -81,19 +86,10 @@ public class MediaServiceImpl implements MediaService {
         if (!this.checkISBN(b.getIsbn())) {
             return MediaServiceResult.BADCODE;
         }
-        int index = -1;
-        for (int i = 0; i < bookList.size(); i++) {
-            if (bookList.get(i).equals(b)) {
-                index = i;
-                i = bookList.size();
-            }
-        }
-        if (index > -1) {
-            bookList.remove(index);
-            bookList.add(b);
+        try {
+            dbMan.updateBook(b);
             res = MediaServiceResult.SUCCESS;
-        }
-        else {
+        } catch (MediaNotFoundException e) {
             res = MediaServiceResult.NOTFOUND;
         }
         return res;
@@ -108,19 +104,10 @@ public class MediaServiceImpl implements MediaService {
         if (!this.checkBarcode(d.getBarcode())) {
             return MediaServiceResult.BADCODE;
         }
-        int index = -1;
-        for (int i = 0; i < disclist.size(); i++) {
-            if (disclist.get(i).equals(d)) {
-                index = i;
-                i = disclist.size();
-            }
-        }
-        if (index > -1) {
-            disclist.remove(index);
-            disclist.add(d);
+        try {
+            dbMan.updateDisc(d);
             res = MediaServiceResult.SUCCESS;
-        }
-        else {
+        } catch (MediaNotFoundException e) {
             res = MediaServiceResult.NOTFOUND;
         }
         return res;
@@ -128,12 +115,14 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public Medium[] getBooks() {
-        return MediaServiceImpl.bookList.toArray(new Medium[bookList.size()]);
+        return (Medium[]) dbMan.getAllBooks().toArray();
+//        return MediaServiceImpl.bookList.toArray(new Medium[bookList.size()]);
     }
 
     @Override
     public Medium[] getDiscs() {
-        return MediaServiceImpl.disclist.toArray(new Medium[disclist.size()]);
+        return (Medium[]) dbMan.getAllDiscs().toArray();
+//        return MediaServiceImpl.disclist.toArray(new Medium[disclist.size()]);
     }
 
     /**
@@ -141,6 +130,7 @@ public class MediaServiceImpl implements MediaService {
      * @return Status whether list clearing was successful
      */
     public MediaServiceResult deleteLists() {
+        //TODO Impplement delete all function
         disclist.clear();
         bookList.clear();
         return MediaServiceResult.SUCCESS;

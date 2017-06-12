@@ -1,6 +1,7 @@
 package edu.hm.shareit.persistence;
 
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,8 +22,6 @@ import edu.hm.shareit.models.Disc;
  */
 public class DatabaseManagerImpl implements DatabaseManager {
 
-
-    //    private final SessionFactory sessionF;
     private Session entityManager;
     private Transaction tx;
 
@@ -31,7 +30,6 @@ public class DatabaseManagerImpl implements DatabaseManager {
      */
     @Inject
     public DatabaseManagerImpl() {
-        //        sessionF = new Configuration().configure().buildSessionFactory();
         entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
     }
 
@@ -101,6 +99,22 @@ public class DatabaseManagerImpl implements DatabaseManager {
         entityManager.delete(disc);
         tx.commit();
     }
+    
+    @Override
+    public void deleteAll() {
+        List<Book> books = this.getAllBooks();
+        List<Disc> discs = this.getAllDiscs();
+        if (!books.isEmpty()) {
+            for (Iterator<Book> it = books.iterator(); it.hasNext();) {
+                this.deleteBook(it.next());
+            }
+        }
+        if (!discs.isEmpty()) {
+            for (Iterator<Disc> it = discs.iterator(); it.hasNext();) {
+                this.deleteDisc(it.next());
+            }
+        }
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -160,7 +174,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
      * @author Thomas Murschall
      *
      */
-    class DuplicateException extends Exception {
+    public class DuplicateException extends Exception {
         /**
          * 
          */
@@ -180,7 +194,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
      * @author Thomas Murschall
      *
      */
-    class MediaNotFoundException extends Exception {
+    public class MediaNotFoundException extends Exception {
         /**
          * 
          */
@@ -194,5 +208,4 @@ public class DatabaseManagerImpl implements DatabaseManager {
             super(message);
         }
     }
-
 }

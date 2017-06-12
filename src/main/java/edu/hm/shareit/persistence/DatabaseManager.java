@@ -59,6 +59,11 @@ public interface DatabaseManager {
     
     /**
      * 
+     */
+    void deleteAll();
+    
+    /**
+     * 
      * @param book 
      * @throws MediaNotFoundException 
      */
