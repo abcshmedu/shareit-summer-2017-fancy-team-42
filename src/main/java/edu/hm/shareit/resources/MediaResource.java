@@ -4,6 +4,7 @@ package edu.hm.shareit.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.hm.ShareitServletContextListener;
 import edu.hm.shareit.Services.MediaService;
 import edu.hm.shareit.Services.MediaServiceImpl;
 import edu.hm.shareit.Services.MediaServiceResult;
@@ -11,6 +12,7 @@ import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Response;
@@ -26,15 +28,16 @@ import java.net.URISyntaxException;
 @Path("/media")
 public class MediaResource {
 
-    private MediaService ms;
+    private final MediaService ms;
     private static final String CookieName = "Token";
     private final String LogInPage = "http://localhost:8083/";
 
     /**
      * Constructor of class.
      */
-    public MediaResource() {
-        ms = new MediaServiceImpl();
+    @Inject
+    public MediaResource( MediaService ms ) {
+        this.ms = ms;
     }
 
 
@@ -51,21 +54,10 @@ public class MediaResource {
         if (token != null) {
             jwt = ms.getJWTCookie(token.getValue());
         }
-
         if (jwt.equals("")) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
             return Response
-                    .seeOther(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -94,21 +86,14 @@ public class MediaResource {
     @Path("/books/{isbn}")
     @Produces("application/json")
     public Response getISBNBook(@CookieParam(CookieName) Cookie token, @PathParam("isbn")String isbn) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -150,21 +135,14 @@ public class MediaResource {
     @Path("/discs")
     @Produces("application/json")
     public Response getDiscs(@CookieParam(CookieName) Cookie token) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -193,21 +171,14 @@ public class MediaResource {
     @Path("/discs/{barcode}")
     @Produces("application/json")
     public Response getBarDisc(@CookieParam(CookieName) Cookie token, @PathParam("barcode")String code) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -249,21 +220,14 @@ public class MediaResource {
     @Produces("application/json")
     @Consumes("application/json")
     public Response createBook(@CookieParam(CookieName) Cookie token, Book b) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -285,21 +249,14 @@ public class MediaResource {
     @Produces("application/json")
     @Consumes("application/json")
     public Response createDisc(@CookieParam(CookieName) Cookie token, Disc d) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -322,21 +279,14 @@ public class MediaResource {
     @Produces("application/json")
     @Consumes("application/json")
     public Response changeDisc(@CookieParam(CookieName) Cookie token, @PathParam("barcode")String code, Disc d) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -364,21 +314,14 @@ public class MediaResource {
     @Produces("application/json")
     @Consumes("application/json")
     public Response changeBook(@CookieParam(CookieName) Cookie token, @PathParam("isbn")String isbn, Book b) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 
@@ -403,21 +346,14 @@ public class MediaResource {
     @Path("/remove")
     @Produces("application/json")
     public Response delAll(@CookieParam(CookieName) Cookie token) {
-        String jwt = ms.getJWTCookie(token.getValue());
-        if (jwt == null) {
-            URI uri = null;
-            try {
-                uri = new URI(LogInPage);
-            }
-            catch (URISyntaxException e) {
-                return Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"message\";\"You are not authorized.\"}")
-                        .build();
-            }
-
+        String jwt = "";
+        if (token != null) {
+            jwt = ms.getJWTCookie(token.getValue());
+        }
+        if (jwt.equals("")) {
             return Response
-                    .temporaryRedirect(uri)
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"message\":\"You are not authorized.\"}")
                     .build();
         }
 

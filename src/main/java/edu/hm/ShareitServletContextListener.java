@@ -9,6 +9,7 @@ import com.google.inject.servlet.ServletModule;
 //import edu.hm.shareit.persistence.MediaPersistenceImpl;
 import edu.hm.shareit.Services.MediaService;
 import edu.hm.shareit.Services.MediaServiceImpl;
+import edu.hm.shareit.resources.MediaResource;
 
 /**
  * Context Listener to enable usage of google guice together with jersey.
