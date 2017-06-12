@@ -1,10 +1,16 @@
 package edu.hm.shareit.models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * @author Thomas Murschall
  */
+@Entity 
+@Table(name = "TDisc")
 public class Disc extends Medium {
-    private String barcode;
+    @Id private String barcode;
     private String director;
     private int fsk;
     

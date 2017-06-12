@@ -1,11 +1,17 @@
 package edu.hm.shareit.models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * @author Thomas Murschall
  */
+@Entity 
+@Table(name = "TBook")
 public class Book extends Medium {
     private String author;
-    private String isbn;
+    @Id private String isbn;
     
     /**
      * Empty constructor.
