@@ -6,11 +6,14 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+
 
 /**
  * Test that checks if the annotations were correct.

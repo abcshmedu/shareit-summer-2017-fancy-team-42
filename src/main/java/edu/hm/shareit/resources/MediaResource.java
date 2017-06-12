@@ -4,9 +4,7 @@ package edu.hm.shareit.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hm.ShareitServletContextListener;
 import edu.hm.shareit.Services.MediaService;
-import edu.hm.shareit.Services.MediaServiceImpl;
 import edu.hm.shareit.Services.MediaServiceResult;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
@@ -16,8 +14,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.net.URISyntaxException;
+
 
 /**
  * Created by Markus Krahl on 21.04.17.
@@ -56,8 +53,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -92,8 +89,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -141,8 +138,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -177,8 +174,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -226,8 +223,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -254,8 +251,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -284,8 +281,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -319,8 +316,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
@@ -351,8 +348,8 @@ public class MediaResource {
         }
         if (jwt.equals("")) {
             return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"message\":\"You are not authorized.\"}")
+                    .status(MediaServiceResult.NOTAUTHORIZED.getCode())
+                    .entity(MediaServiceResult.NOTAUTHORIZED.getStatus())
                     .build();
         }
 
