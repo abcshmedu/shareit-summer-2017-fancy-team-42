@@ -3,11 +3,14 @@ package edu.hm.shareit.persistence;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
+
+import edu.hm.ShareitServletContextListener;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 
@@ -19,38 +22,55 @@ import edu.hm.shareit.models.Disc;
 public class DatabaseManagerImpl implements DatabaseManager {
 
 
-    private final SessionFactory sessionF;
-
+    //    private final SessionFactory sessionF;
     private Session entityManager;
     private Transaction tx;
 
     /**
      * 
      */
+    @Inject
     public DatabaseManagerImpl() {
-        sessionF = new Configuration().configure().buildSessionFactory();
+        //        sessionF = new Configuration().configure().buildSessionFactory();
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
     }
 
 
     @Override
-    public void insertBook(Book book) {
-        entityManager = sessionF.getCurrentSession();
-        tx = entityManager.beginTransaction();
-        entityManager.persist(book);
-        tx.commit();
+    public void insertBook(Book book) throws DuplicateException {
+        try {
+            entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
+            tx = entityManager.beginTransaction();
+            entityManager.persist(book);
+            tx.commit();
+        } catch (Exception e) {
+            if (e.getMessage().equals("org.hibernate.exception.ConstraintViolationException: could not execute statement")) {
+                throw new DuplicateException("Already inserted");
+            } else {
+                throw e;
+            }
+        }
     }
 
     @Override
-    public void insertDisc(Disc disc) {
-        entityManager = sessionF.getCurrentSession();
+    public void insertDisc(Disc disc) throws DuplicateException {
+        try {
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         entityManager.persist(disc);
         tx.commit();
+        } catch (Exception e) {
+            if (e.getMessage().equals("org.hibernate.exception.ConstraintViolationException: could not execute statement")) {
+                throw new DuplicateException("Already inserted");
+            } else {
+                throw e;
+            }
+        }
     }
 
     @Override
     public Book getBook(String isbn) {
-        entityManager = sessionF.getCurrentSession();
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         Book out = entityManager.get(Book.class, isbn);
         tx.commit();
@@ -59,7 +79,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public Disc getDisc(String barcode) {
-        entityManager = sessionF.getCurrentSession();
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         Disc out = entityManager.get(Disc.class, barcode);
         tx.commit();
@@ -68,7 +88,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public void deleteBook(Book book) {
-        entityManager = sessionF.getCurrentSession();
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         entityManager.delete(book);
         tx.commit();
@@ -76,7 +96,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public void deleteDisc(Disc disc) {
-        entityManager = sessionF.getCurrentSession();
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         entityManager.delete(disc);
         tx.commit();
@@ -85,7 +105,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     @SuppressWarnings("unchecked")
     @Override
     public List<Book> getAllBooks() {
-        entityManager = sessionF.getCurrentSession();
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         List<Book> out = entityManager.createQuery("From Book").list();
         tx.commit();
@@ -95,7 +115,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     @SuppressWarnings("unchecked")
     @Override
     public List<Disc> getAllDiscs() {
-        entityManager = sessionF.getCurrentSession();
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         List<Disc> out = entityManager.createQuery("From Disc").list();
         tx.commit();
@@ -103,20 +123,76 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public void updateBook(Book book) {
-        entityManager = sessionF.getCurrentSession();
+    public void updateBook(Book book) throws MediaNotFoundException {
+        try {
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         entityManager.update(book);
         tx.commit();
+    } catch (Exception e) {
+        if (e.getMessage().equals("Batch update returned unexpected row count from update [0]; actual row count: 0; expected: 1")) {
+            throw new MediaNotFoundException("Media not in Database");
+        } else {
+            throw e;
+        }
+    }
     }
 
 
     @Override
-    public void updateDisc(Disc disc) {
-        entityManager = sessionF.getCurrentSession();
+    public void updateDisc(Disc disc) throws MediaNotFoundException {
+        try {
+        entityManager = ShareitServletContextListener.getInjectorInstance().getInstance(SessionFactory.class).getCurrentSession();
         tx = entityManager.beginTransaction();
         entityManager.update(disc);
         tx.commit();
+        } catch (Exception e) {
+            if (e.getMessage().equals("Batch update returned unexpected row count from update [0]; actual row count: 0; expected: 1")) {
+                throw new MediaNotFoundException("Media not in Database");
+            } else {
+                throw e;
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @author Thomas Murschall
+     *
+     */
+    class DuplicateException extends Exception {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 
+         * @param message 
+         */
+        DuplicateException(String message) {
+            super(message);
+        }
+    }
+    
+    /**
+     * 
+     * @author Thomas Murschall
+     *
+     */
+    class MediaNotFoundException extends Exception {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 
+         * @param message 
+         */
+        MediaNotFoundException(String message) {
+            super(message);
+        }
     }
 
 }

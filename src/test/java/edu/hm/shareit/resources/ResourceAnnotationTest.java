@@ -9,6 +9,7 @@ import java.net.URL;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -19,6 +20,7 @@ import org.junit.Test;
  * @author Markus Krahl
  *
  */
+@Ignore
 public class ResourceAnnotationTest {
 
     public static final String APP_URL = "/";

@@ -6,7 +6,7 @@ package edu.hm.shareit.Services;
  */
 public enum MediaServiceResult {
     SUCCESS(200, "{\"Message\":\"Changes were successful\"}"), DUPLICATE(200, "{\"Message\":\"Current media-number does already exist.\"}"),
-        ERROR(200, "{\"Message\":\"Error while processing data\"}"),
+    ERROR(200, "{\"Message\":\"Error while processing data\"}"),
     NOTFOUND(200, "{\"Message\":\"media-number does not exist. Make Sure that the media-number in URI and JSON-body is equal. \"}"),
     BADINFORMATION(200, "{\"Message\":\"Service needs more parameter. Please provide them.\"}"),
     BADREQUEST(200, "{\"Message\":\"Changing media number is forbidden.\"}"),
@@ -38,5 +38,5 @@ public enum MediaServiceResult {
     public String getStatus() {
         return state;
     }
-    
+
 }

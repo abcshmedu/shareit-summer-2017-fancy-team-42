@@ -9,7 +9,6 @@ import com.google.inject.servlet.ServletModule;
 //import edu.hm.shareit.persistence.MediaPersistenceImpl;
 import edu.hm.shareit.Services.MediaService;
 import edu.hm.shareit.Services.MediaServiceImpl;
-import edu.hm.shareit.resources.MediaResource;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -37,7 +36,7 @@ public class ShareitServletContextListener extends GuiceServletContextListener {
      * This method is only required for the HK2-Guice-Bridge in the Application class.
      * @return Injector instance.
      */
-    static Injector getInjectorInstance() {
+    public static Injector getInjectorInstance() {
         return injector;
     }
 
