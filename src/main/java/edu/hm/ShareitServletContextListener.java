@@ -6,6 +6,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import edu.hm.shareit.Services.MediaService;
 import edu.hm.shareit.Services.MediaServiceImpl;
+import edu.hm.shareit.resources.MediaResource;
 
 /**
 

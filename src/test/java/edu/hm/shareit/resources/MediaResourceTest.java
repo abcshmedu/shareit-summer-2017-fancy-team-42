@@ -6,15 +6,19 @@ import static org.junit.Assert.assertTrue;
 import javax.ws.rs.core.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import edu.hm.shareit.Services.MediaService;
+import edu.hm.shareit.Services.MediaServiceImpl;
 import org.json.JSONObject;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,6 +37,13 @@ import java.util.List;
  *
  */
 public class MediaResourceTest {
+    private static final Injector injector = Guice.createInjector(new AbstractModule() {
+        @Override
+        protected void configure() {
+            bind(MediaService.class).to(MediaServiceImpl.class);
+        }
+    });
+    @Inject
     private static MediaResource medRes;
     private static Cookie cookie;
     private static final String CookieName = "Token";
@@ -69,7 +80,7 @@ public class MediaResourceTest {
         }
 
 
-        medRes = new MediaResource();
+        medRes = new MediaResource(injector.getInstance(MediaService.class));
     }
     
     /**
