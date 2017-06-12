@@ -9,6 +9,8 @@ import com.google.inject.servlet.ServletModule;
 //import edu.hm.shareit.persistence.MediaPersistenceImpl;
 import edu.hm.shareit.Services.MediaService;
 import edu.hm.shareit.Services.MediaServiceImpl;
+import edu.hm.shareit.persistence.DatabaseManager;
+import edu.hm.shareit.persistence.DatabaseManagerImpl;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -23,6 +25,7 @@ public class ShareitServletContextListener extends GuiceServletContextListener {
         @Override
         protected void configureServlets() {
             bind(MediaService.class).to(MediaServiceImpl.class);
+            bind(DatabaseManager.class).to(DatabaseManagerImpl.class);
             bind(SessionFactory.class).toInstance(new Configuration().configure().buildSessionFactory());
         }
     });
