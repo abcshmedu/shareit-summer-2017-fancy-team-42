@@ -17,9 +17,9 @@
         <property name="hbm2ddl.auto">create</property>
         <property name="transaction.auto_close_session">true</property>
 
-        <mapping class="edu.hm.shareit.persistence.TBook" />
-        <mapping class="edu.hm.shareit.persistence.TDisc" />
-        <mapping class="edu.hm.shareit.persistence.TMedium" />
+        <mapping class="edu.hm.shareit.models.Book" />
+        <mapping class="edu.hm.shareit.models.Disc" />
+        <mapping class="edu.hm.shareit.models.Medium" />
 
     </session-factory>
 
