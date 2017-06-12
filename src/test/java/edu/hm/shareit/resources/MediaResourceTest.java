@@ -33,7 +33,7 @@ public class MediaResourceTest {
     private final Injector injector = Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-            bind(MediaService.class).toInstance(mock(MediaServiceImpl.class));
+            bind(MediaService.class).toInstance(mock(MediaService.class));
         }
     });
     @Inject
