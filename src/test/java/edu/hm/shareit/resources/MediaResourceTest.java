@@ -1,7 +1,10 @@
 package edu.hm.shareit.resources;
 
 
+
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.*;
 
@@ -10,26 +13,16 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 import edu.hm.shareit.Services.MediaService;
 import edu.hm.shareit.Services.MediaServiceImpl;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import edu.hm.shareit.models.Medium;
+import org.junit.*;
 
 import edu.hm.shareit.Services.MediaServiceResult;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Tests for the MediaRessource-class.
@@ -37,50 +30,27 @@ import java.util.List;
  *
  */
 public class MediaResourceTest {
-    private static final Injector injector = Guice.createInjector(new AbstractModule() {
+    private final Injector injector = Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-            bind(MediaService.class).to(MediaServiceImpl.class);
+            bind(MediaService.class).toInstance(mock(MediaServiceImpl.class));
         }
     });
     @Inject
-    private static MediaResource medRes;
-    private static Cookie cookie;
-    private static final String CookieName = "Token";
+    private MediaResource medRes;
+    private final String CookieName = "Token";
+    private Cookie cookie = new Cookie(CookieName,"token","","/");
+    @Inject
+    private MediaService serviceMock;
 
     /**
      * Setting up for the tests.
      */
-    @BeforeClass
-    public static void setUp() throws ParseException {
-        String authLink = "localhost:8083/authenticate/auth/user";
-
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        WebResource webResource = client.resource(UriBuilder.fromUri(authLink).build());
-        JSONObject body = new JSONObject();
-        body.put("name", "peter");
-        body.put("password", "12345");
-        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, body.toString());
-        List<NewCookie> cookies = response.getCookies();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse("1900-01-01");
-        NewCookie ncookie = null;
-
-        for(NewCookie c:cookies){
-            if(c.getExpiry().compareTo(date) > 0 && c.getName().equals(CookieName)) {
-                date = c.getExpiry();
-                ncookie = c;
-            }
-        }
-
-        if(ncookie != null){
-            cookie = ncookie.toCookie();
-        }
-
-
-        medRes = new MediaResource(injector.getInstance(MediaService.class));
+    @Before
+    public void setUp(){
+        injector.injectMembers(this);
+        when(serviceMock.getJWTCookie("token")).thenReturn("{\"sample-jwt\":\"user-id\"}");
+        when(serviceMock.deleteLists()).thenReturn(MediaServiceResult.SUCCESS);
     }
     
     /**
@@ -97,12 +67,13 @@ public class MediaResourceTest {
      * @throws Exception 
      */
     @Test
-    public void insertBookTest() throws Exception {
+    public void  insertBook() throws Exception {
         Book b = new Book("Mustermann", "9783065210201", "Title");
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createBook(cookie, b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
-        
         b = new Book("Mustermann", "0198526636", "Title");
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         res = medRes.createBook(cookie, b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
     }
@@ -115,6 +86,7 @@ public class MediaResourceTest {
     public void insertDiscTest() throws Exception {
         final int fsk = 6;
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createDisc(cookie, d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());      
     }
@@ -126,11 +98,12 @@ public class MediaResourceTest {
     @Test
     public void updateBookTest() throws Exception {
         Book b = new Book("Mustermann", "9783065210201", "Title");
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createBook(cookie, b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
         
         b = new Book("Musterfrau", "9783065210201", "Title");
-        
+        when(serviceMock.updateBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         res = medRes.changeBook(cookie, "9783065210201", b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
     }
@@ -143,10 +116,12 @@ public class MediaResourceTest {
     public void updateDiscTest() throws Exception {
         final int fsk = 6;
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createDisc(cookie, d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
         
         d = new Disc("5449000096241", "Musterfrau", fsk, "Musterfilm");
+        when(serviceMock.updateDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         res = medRes.changeDisc(cookie, "5449000096241", d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
     }
@@ -158,10 +133,12 @@ public class MediaResourceTest {
     @Test
     public void duplicateBookTest() throws Exception {
         Book b = new Book("Mustermann", "9783065210201", "Title");
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createBook(cookie, b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
         
         b = new Book("Mustermann", "9783065210201", "Title");
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.DUPLICATE);
         res = medRes.createBook(cookie, b);
         assertTrue(MediaServiceResult.DUPLICATE.getStatus() == res.getEntity());
     }
@@ -174,10 +151,12 @@ public class MediaResourceTest {
     public void duplicateDiscTest() throws Exception {
         final int fsk = 6;
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createDisc(cookie, d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
         
         d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.DUPLICATE);
         res = medRes.createDisc(cookie, d);
         assertTrue(MediaServiceResult.DUPLICATE.getStatus() == res.getEntity());
     }
@@ -189,11 +168,11 @@ public class MediaResourceTest {
     @Test
     public void invalidUpdateBookTest() throws Exception {
         Book b = new Book("Mustermann", "9783065210201", "Title");
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createBook(cookie, b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
         
         b = new Book("Musterfrau", "9783065210201", "Title");
-        
         res = medRes.changeBook(cookie, "9783127323207", b);
         assertTrue(MediaServiceResult.BADREQUEST.getStatus() == res.getEntity());
     }
@@ -206,12 +185,13 @@ public class MediaResourceTest {
     public void invalidUpdateDiscTest() throws Exception {
         final int fsk = 6;
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createDisc(cookie, d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
         
-        d = new Disc("5030917105081", "Musterfrau", fsk, "Musterfilm");
+        d = new Disc("5449000096241", "Musterfrau", fsk, "Musterfilm");
         res = medRes.changeDisc(cookie, "5030917105081", d);
-        assertTrue(MediaServiceResult.NOTFOUND.getStatus() == res.getEntity());
+        assertTrue(MediaServiceResult.BADREQUEST.getStatus() == res.getEntity());
     }
     
     /**
@@ -224,9 +204,12 @@ public class MediaResourceTest {
         Book b = new Book("Ian Flemming", isbn, "Casino Royal");
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(b);
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createBook(cookie, b);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
-
+        Medium[] books = new Medium[1];
+        books[0] = b;
+        when(serviceMock.getBooks()).thenReturn(books);
         res = medRes.getISBNBook(cookie, isbn);
         assertTrue(json.equals(res.getEntity()));
     }
@@ -240,9 +223,12 @@ public class MediaResourceTest {
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(d);
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createDisc(cookie, d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
-        
+        Medium[] discs = new Medium[1];
+        discs[0] = d;
+        when(serviceMock.getDiscs()).thenReturn(discs);
         res = medRes.getBarDisc(cookie, "5449000096241");
         assertTrue(json.equals(res.getEntity()));
     }
@@ -254,14 +240,21 @@ public class MediaResourceTest {
     @Test
     public void getBooksTest() throws Exception {
         String start = "[]";
+        when(serviceMock.getBooks()).thenReturn(new Medium[0]);
         Response res = medRes.getBooks(cookie);
         assertTrue(res.getEntity().equals(start));
         Book b1 = new Book("Ian Flemming", "9783127323207", "Casino Royal");
         Book b2 = new Book("Ian Flemming", "9783065210201", "Goldeneye");
+        when(serviceMock.addBook(b1)).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.addBook(b2)).thenReturn(MediaServiceResult.SUCCESS);
         medRes.createBook(cookie, b1);
         medRes.createBook(cookie, b2);
+        Medium[] books = new Medium[2];
+        books[0] = b1;
+        books[1] = b2;
         ObjectMapper mapper = new ObjectMapper();
         String json = "[" + mapper.writeValueAsString(b1) + "," + mapper.writeValueAsString(b2) + "]";
+        when(serviceMock.getBooks()).thenReturn(books);
         res = medRes.getBooks(cookie);
         assertTrue(res.getEntity().equals(json));
     }
@@ -274,14 +267,21 @@ public class MediaResourceTest {
     public void getDiscsTest() throws Exception {
         String start = "[]";
         final int fsk = 12;
+        when(serviceMock.getDiscs()).thenReturn(new Medium[0]);
         Response res = medRes.getDiscs(cookie);
         assertTrue(res.getEntity().equals(start));
         Disc d1 = new Disc("5449000096241", "Ian Flemming", fsk, "Casino Royal");
         Disc d2 = new Disc("5030917105081", "Ian Flemming", fsk, "Goldeneye");
+        when(serviceMock.addDisc(d1)).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.addDisc(d2)).thenReturn(MediaServiceResult.SUCCESS);
         medRes.createDisc(cookie, d1);
         medRes.createDisc(cookie, d2);
+        Medium[] discs = new Medium[2];
+        discs[0] = d1;
+        discs[1] = d2;
         ObjectMapper mapper = new ObjectMapper();
         String json = "[" + mapper.writeValueAsString(d1) + "," + mapper.writeValueAsString(d2) + "]";
+        when(serviceMock.getDiscs()).thenReturn(discs);
         res = medRes.getDiscs(cookie);
         assertTrue(res.getEntity().equals(json));
     }
@@ -295,9 +295,11 @@ public class MediaResourceTest {
         final int fsk = 12;
         Disc d = new Disc("5449000096241", "Steven Spielberg", fsk, "Indiana Jones");
         Book b = new Book("Ian Flemming", "9783065210201", "Casino Royal");
-
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         medRes.createBook(cookie, b);
         medRes.createDisc(cookie, d);
+        when(serviceMock.deleteLists()).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.delAll(cookie);
         Response res1 = medRes.createBook(cookie, b);
         Response res2 = medRes.createDisc(cookie, d);

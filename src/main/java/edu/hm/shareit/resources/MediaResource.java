@@ -232,7 +232,6 @@ public class MediaResource {
         }
 
         MediaServiceResult res = ms.addBook(b);
-
         return Response
                 .status(res.getCode())
                 .entity(res.getStatus())
