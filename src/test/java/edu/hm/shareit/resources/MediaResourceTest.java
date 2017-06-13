@@ -36,8 +36,8 @@ public class MediaResourceTest {
     });
     @Inject
     private MediaResource medRes;
-    private final String CookieName = "Token";
-    private Cookie cookie = new Cookie(CookieName,"token","","/");
+    private final String cookieName = "Token";
+    private Cookie cookie = new Cookie(cookieName, "token", "", "/");
     @Inject
     private MediaService serviceMock;
 
@@ -45,10 +45,10 @@ public class MediaResourceTest {
      * Setting up for the tests.
      */
     @Before
-    public void setUp(){
+    public void setUp() {
         injector.injectMembers(this);
         when(serviceMock.getJWTCookie("token")).thenReturn("{\"sample-jwt\":\"user-id\"}");
-        when(serviceMock.resetDatabse()).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.resetDatabase()).thenReturn(MediaServiceResult.SUCCESS);
     }
     
     /**
@@ -59,7 +59,7 @@ public class MediaResourceTest {
         medRes.delAll(cookie);
     }
 
-
+ 
     /**
      * Insert a valid book.
      * @throws Exception 
@@ -77,6 +77,18 @@ public class MediaResourceTest {
     }
     
     /**
+     * No cookie isnertion test.
+     * @throws Exception 
+     */
+    @Test
+    public void  insertBookNoCookieTest() throws Exception {
+        Book b = new Book("Mustermann", "9783065210201", "Title");
+        Response res = medRes.createBook(null, b);
+        assertTrue(MediaServiceResult.NOTAUTHORIZED.getStatus() == res.getEntity());
+    }
+    
+    
+    /**
      * Insert valid discs.
      * @throws Exception 
      */
@@ -87,6 +99,19 @@ public class MediaResourceTest {
         when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.createDisc(cookie, d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());      
+    }
+    
+    /**
+     * No cookie insertion test.
+     * @throws Exception 
+     */
+    @Test
+    public void insertDiscNoCookieTest() throws Exception {
+        final int fsk = 6;
+        Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
+        Response res = medRes.createDisc(null, d);
+        assertTrue(MediaServiceResult.NOTAUTHORIZED.getStatus() == res.getEntity());      
     }
     
     /**
@@ -107,6 +132,23 @@ public class MediaResourceTest {
     }
     
     /**
+     * No cookie update test.
+     * @throws Exception 
+     */
+    @Test
+    public void updateBookNoCookieTest() throws Exception {
+        Book b = new Book("Mustermann", "9783065210201", "Title");
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
+        Response res = medRes.createBook(cookie, b);
+        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
+        
+        b = new Book("Musterfrau", "9783065210201", "Title");
+        when(serviceMock.updateBook(b)).thenReturn(MediaServiceResult.SUCCESS);
+        res = medRes.changeBook(null, "9783065210201", b);
+        assertTrue(MediaServiceResult.NOTAUTHORIZED.getStatus() == res.getEntity());
+    }
+    
+    /**
      * Valid disc update.
      * @throws Exception 
      */
@@ -122,6 +164,24 @@ public class MediaResourceTest {
         when(serviceMock.updateDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
         res = medRes.changeDisc(cookie, "5449000096241", d);
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
+    }
+    
+    /**
+     * No cookie update test.
+     * @throws Exception 
+     */
+    @Test
+    public void updateDiscNoCookieTest() throws Exception {
+        final int fsk = 6;
+        Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
+        Response res = medRes.createDisc(cookie, d);
+        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
+        
+        d = new Disc("5449000096241", "Musterfrau", fsk, "Musterfilm");
+        when(serviceMock.updateDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
+        res = medRes.changeDisc(null, "5449000096241", d);
+        assertTrue(MediaServiceResult.NOTAUTHORIZED.getStatus() == res.getEntity());
     }
     
     /**
@@ -211,6 +271,26 @@ public class MediaResourceTest {
         res = medRes.getISBNBook(cookie, isbn);
         assertTrue(json.equals(res.getEntity()));
     }
+    
+    /**
+     *  No cookie isbn test.
+     * @throws Exception 
+     */
+    @Test
+    public void getBookIsbnNoCookieTest() throws Exception {
+        String isbn = "9783127323207";
+        Book b = new Book("Ian Flemming", isbn, "Casino Royal");
+        String json = "{\"Message\":\"For that Operation a valid Log In is required.\"}";
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
+        Response res = medRes.createBook(cookie, b);
+        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
+        Medium[] books = new Medium[1];
+        books[0] = b;
+        when(serviceMock.getBooks()).thenReturn(books);
+        res = medRes.getISBNBook(null, isbn);
+        assertTrue(json.equals(res.getEntity()));
+    }
+    
     /**
      * Test to find a disc with the barcode.
      * @throws Exception 
@@ -228,6 +308,25 @@ public class MediaResourceTest {
         discs[0] = d;
         when(serviceMock.getDiscs()).thenReturn(discs);
         res = medRes.getBarDisc(cookie, "5449000096241");
+        assertTrue(json.equals(res.getEntity()));
+    }
+    
+    /**
+     * No cookie barcode test.
+     * @throws Exception 
+     */
+    @Test
+    public void getBarDiscNoCookieTest() throws Exception {
+        final int fsk = 6;
+        Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        String json = "{\"Message\":\"For that Operation a valid Log In is required.\"}";
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
+        Response res = medRes.createDisc(cookie, d);
+        assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity());
+        Medium[] discs = new Medium[1];
+        discs[0] = d;
+        when(serviceMock.getDiscs()).thenReturn(discs);
+        res = medRes.getBarDisc(null, "5449000096241");
         assertTrue(json.equals(res.getEntity()));
     }
     
@@ -254,6 +353,32 @@ public class MediaResourceTest {
         String json = "[" + mapper.writeValueAsString(b1) + "," + mapper.writeValueAsString(b2) + "]";
         when(serviceMock.getBooks()).thenReturn(books);
         res = medRes.getBooks(cookie);
+        assertTrue(res.getEntity().equals(json));
+    }
+    
+    /**
+     * No cookie get all books test.
+     * @throws Exception 
+     */
+    @Test
+    public void getBooksNoCookieTest() throws Exception {
+        String start = "[]";
+        when(serviceMock.getBooks()).thenReturn(new Medium[0]);
+        Response res = medRes.getBooks(cookie);
+        assertTrue(res.getEntity().equals(start));
+        Book b1 = new Book("Ian Flemming", "9783127323207", "Casino Royal");
+        Book b2 = new Book("Ian Flemming", "9783065210201", "Goldeneye");
+        when(serviceMock.addBook(b1)).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.addBook(b2)).thenReturn(MediaServiceResult.SUCCESS);
+        medRes.createBook(cookie, b1);
+        medRes.createBook(cookie, b2);
+        Medium[] books = new Medium[2];
+        books[0] = b1;
+        books[1] = b2;
+        String json = "{\"Message\":\"For that Operation a valid Log In is required.\"}";
+        when(serviceMock.getBooks()).thenReturn(books);
+        res = medRes.getBooks(null);
+        System.out.println(res.getEntity());
         assertTrue(res.getEntity().equals(json));
     }
 
@@ -283,6 +408,32 @@ public class MediaResourceTest {
         res = medRes.getDiscs(cookie);
         assertTrue(res.getEntity().equals(json));
     }
+    
+    /**
+     * No cookie get discs tests.
+     * @throws Exception 
+     */
+    @Test
+    public void getDiscsNoCookieTest() throws Exception {
+        String start = "[]";
+        final int fsk = 12;
+        when(serviceMock.getDiscs()).thenReturn(new Medium[0]);
+        Response res = medRes.getDiscs(cookie);
+        assertTrue(res.getEntity().equals(start));
+        Disc d1 = new Disc("5449000096241", "Ian Flemming", fsk, "Casino Royal");
+        Disc d2 = new Disc("5030917105081", "Ian Flemming", fsk, "Goldeneye");
+        when(serviceMock.addDisc(d1)).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.addDisc(d2)).thenReturn(MediaServiceResult.SUCCESS);
+        medRes.createDisc(cookie, d1);
+        medRes.createDisc(cookie, d2);
+        Medium[] discs = new Medium[2];
+        discs[0] = d1;
+        discs[1] = d2;
+        String json = "{\"Message\":\"For that Operation a valid Log In is required.\"}";
+        when(serviceMock.getDiscs()).thenReturn(discs);
+        res = medRes.getDiscs(null);
+        assertTrue(res.getEntity().equals(json));
+    }
 
     /**
      * Test for delete method.
@@ -297,11 +448,30 @@ public class MediaResourceTest {
         when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         medRes.createBook(cookie, b);
         medRes.createDisc(cookie, d);
-        when(serviceMock.resetDatabse()).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.resetDatabase()).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.delAll(cookie);
         Response res1 = medRes.createBook(cookie, b);
-        Response res2 = medRes.createDisc(cookie, d);
+        Response res2 = medRes.createDisc(cookie, d); 
 
         assertTrue(MediaServiceResult.SUCCESS.getStatus() == res.getEntity() && MediaServiceResult.SUCCESS.getStatus() == res1.getEntity() && MediaServiceResult.SUCCESS.getStatus() == res2.getEntity());
+    }
+    
+    /**
+     * No cookie deleteALl test.
+     * @throws Exception 
+     */
+    @Test
+    public void delAllNoCookieTest() throws Exception {
+        final int fsk = 12;
+        Disc d = new Disc("5449000096241", "Steven Spielberg", fsk, "Indiana Jones");
+        Book b = new Book("Ian Flemming", "9783065210201", "Casino Royal");
+        when(serviceMock.addDisc(d)).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
+        medRes.createBook(cookie, b);
+        medRes.createDisc(cookie, d);
+        when(serviceMock.resetDatabase()).thenReturn(MediaServiceResult.SUCCESS);
+        Response res = medRes.delAll(null);
+
+        assertTrue(MediaServiceResult.NOTAUTHORIZED.getStatus() == res.getEntity());
     }
 }

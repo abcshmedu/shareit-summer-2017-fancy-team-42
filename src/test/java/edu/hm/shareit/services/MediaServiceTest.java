@@ -40,6 +40,9 @@ public class MediaServiceTest {
     @Inject
     private DatabaseManager dbMock;
 
+    /**
+     * 
+     */
     @Before
     public void setUp() {
         injector.injectMembers(this);
@@ -47,10 +50,10 @@ public class MediaServiceTest {
 
     /**
      * 
-     * @throws Exception
+     * @throws Exception 
      */
     @Test
-    public void TestGetBooks() throws Exception {
+    public void getBooksTest() throws Exception {
         Book b = new Book("Mustermann", "9783065210201", "Title");
         //insert hat void, dehsalb muss nichts getan werden für den mock beim Einfügen.
         MediaServiceResult res =  medServ.addBook(b);
@@ -62,13 +65,29 @@ public class MediaServiceTest {
         Medium[] book = medServ.getBooks();
         assertTrue(book[0].equals(b));
     }
+    
+    /**
+     * Invalid insertion test for books.
+     */
+    @Test
+    public void addBookInvalidTest() {
+        Book b = new Book("", "9783065210201", "Title");
+        //insert hat void, dehsalb muss nichts getan werden für den mock beim Einfügen.
+        MediaServiceResult res =  medServ.addBook(b);
+        assertTrue(res.getStatus().equals(MediaServiceResult.BADINFORMATION.getStatus()));
+        
+        b = new Book("Mustermann", "978306521", "Title");
+        //insert hat void, dehsalb muss nichts getan werden für den mock beim Einfügen.
+        res =  medServ.addBook(b);
+        assertTrue(res.getStatus().equals(MediaServiceResult.BADCODE.getStatus()));
+    }
 
     /**
      * 
-     * @throws Exception
+     * @throws Exception 
      */
     @Test
-    public void  TestGetDiscs() throws Exception {
+    public void  getDiscsTest() throws Exception {
         final int fsk = 6;
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
         MediaServiceResult res = medServ.addDisc(d);
@@ -81,14 +100,29 @@ public class MediaServiceTest {
     }
     
     /**
+     * INvalid insertion test for discs.
+     */
+    @Test
+    public void addDiscInvalidTest() {
+        final int fsk = 6;
+        Disc d = new Disc("54490000", "Mustermann", fsk, "Musterfilm");
+        MediaServiceResult res = medServ.addDisc(d);
+        assertTrue(res.getStatus().equals(MediaServiceResult.BADCODE.getStatus()));
+        
+        d = new Disc("5449000096241", "", fsk, "Musterfilm");
+        res = medServ.addDisc(d);
+        assertTrue(res.getStatus().equals(MediaServiceResult.BADINFORMATION.getStatus()));
+    }
+    
+    /**
      * 
      */
     @Test
     public void updateBookTest() {
-        Book b = new Book("Mustermann", "9783065210201", "Title");
+        Book b = new Book("Mustermann", "3866801920", "Title");
         assertEquals(medServ.addBook(b), MediaServiceResult.SUCCESS);
         
-        b = new Book("Musterfrau", "9783065210201", "Title2");
+        b = new Book("Musterfrau", "3866801920", "Title2");
         assertEquals(medServ.updateBook(b), MediaServiceResult.SUCCESS);
         
         List<Book> books = new LinkedList<>();
@@ -96,6 +130,21 @@ public class MediaServiceTest {
         when(dbMock.getAllBooks()).thenReturn(books);
         Medium[] book = medServ.getBooks();
         assertTrue(book[0].equals(b));
+    }
+    
+    /**
+     * Invalid update Test for books.
+     */
+    @Test
+    public void updateBookInvalidTest() {
+        Book b = new Book("Mustermann", "3866801920", "Title");
+        assertEquals(medServ.addBook(b), MediaServiceResult.SUCCESS);
+        
+        b = new Book("", "3866801920", "Title2");
+        assertEquals(medServ.updateBook(b), MediaServiceResult.BADINFORMATION);
+        
+        b = new Book("Musterfrau", "3861920", "Title2");
+        assertEquals(medServ.updateBook(b), MediaServiceResult.BADCODE);
     }
 
     /**
@@ -115,6 +164,36 @@ public class MediaServiceTest {
         when(dbMock.getAllDiscs()).thenReturn(discs);
         Medium[] disc = medServ.getDiscs();
         assertTrue(disc[0].equals(d));
+    }
+    
+    /**
+     * Invalid update test for discs.
+     */
+    @Test
+    public void updateDiscInvalidTest() {
+        final int fsk = 6;
+        Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        assertEquals(medServ.addDisc(d), MediaServiceResult.SUCCESS);
+        
+        d = new Disc("5449000096241", "", fsk, "Musterfilm2");
+        assertEquals(medServ.updateDisc(d), MediaServiceResult.BADINFORMATION);
+        
+        d = new Disc("544096241", "Musterfrau", fsk, "Musterfilm2");
+        assertEquals(medServ.updateDisc(d), MediaServiceResult.BADCODE);
+    }
+    
+    /**
+     * 
+     */
+    @Test
+    public void resetDatabaseTest() {
+        final int fsk = 6;
+        Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        assertEquals(medServ.addDisc(d), MediaServiceResult.SUCCESS);
+        Book b = new Book("Mustermann", "9783065210201", "Title");
+        assertEquals(medServ.addBook(b), MediaServiceResult.SUCCESS);
+        assertEquals(medServ.resetDatabase(), MediaServiceResult.SUCCESS);
+       
     }
 
 }

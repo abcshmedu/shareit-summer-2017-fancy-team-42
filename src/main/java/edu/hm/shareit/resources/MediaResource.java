@@ -31,9 +31,11 @@ public class MediaResource {
 
     /**
      * Constructor of class.
+     * 
+     * @param ms 
      */
     @Inject
-    public MediaResource( MediaService ms ) {
+    public MediaResource(MediaService ms) {
         this.ms = ms;
     }
 
@@ -78,6 +80,7 @@ public class MediaResource {
      * Search for a book.
      * @return Response with status
      * @param isbn String, isbn to search for
+     * @param token 
      */
     @GET
     @Path("/books/{isbn}")
@@ -126,6 +129,7 @@ public class MediaResource {
 
     /**
      * Returns all saved Discs.
+     * @param token 
      * @return Response with status
      */
     @GET
@@ -163,6 +167,7 @@ public class MediaResource {
      * Search for a Disc.
      * @return Response with status
      * @param code String, code to search for
+     * @param token 
      */
     @GET
     @Path("/discs/{barcode}")
@@ -210,6 +215,7 @@ public class MediaResource {
     /**
      * Insert a new book to the list.
      * @param b the new book
+     * @param token 
      * @return Response with status
      */
     @POST
@@ -238,6 +244,7 @@ public class MediaResource {
     /**
      * Insert a new disc to the list.
      * @param d the new disc
+     * @param token 
      * @return Response with status
      */
     @POST
@@ -268,6 +275,7 @@ public class MediaResource {
      * Change a disc.
      * @param code The code of the disc we want to change
      * @param d the changed disc
+     * @param token 
      * @return Response with status
      */
     @PUT
@@ -303,6 +311,7 @@ public class MediaResource {
      * Change a book.
      * @param isbn The isbn of the book we want to change
      * @param b the changed book
+     * @param token 
      * @return Response with status
      */
     @PUT
@@ -336,6 +345,7 @@ public class MediaResource {
 
     /**
      * Deletes all lists.
+     * @param token 
      * @return Response with status.
      */
     @GET
@@ -353,7 +363,7 @@ public class MediaResource {
                     .build();
         }
 
-        MediaServiceResult res = ms.resetDatabse();
+        MediaServiceResult res = ms.resetDatabase();
         return Response
                 .status(res.getCode())
                 .entity(res.getStatus())
