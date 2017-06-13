@@ -17,16 +17,11 @@ import org.json.JSONObject;
 import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Markus Krahl, Thomas Murschallon 21.04.17.
  */
 public class MediaServiceImpl implements MediaService {
-
-    private static List<Book> bookList = new LinkedList<>();
-    private static List<Disc> disclist = new LinkedList<>();
     
     private DatabaseManager dbMan;
     
@@ -129,10 +124,8 @@ public class MediaServiceImpl implements MediaService {
      * Help-method only provided for test-cases. Do not use the method in the program.
      * @return Status whether list clearing was successful
      */
-    public MediaServiceResult deleteLists() {
-        //TODO Impplement delete all function
-        disclist.clear();
-        bookList.clear();
+    public MediaServiceResult resetDatabse() {
+        dbMan.deleteAll();
         return MediaServiceResult.SUCCESS;
     }
 

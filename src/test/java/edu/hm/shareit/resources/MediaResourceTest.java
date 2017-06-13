@@ -14,7 +14,6 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.hm.shareit.Services.MediaService;
-import edu.hm.shareit.Services.MediaServiceImpl;
 import edu.hm.shareit.models.Medium;
 import org.junit.*;
 
@@ -22,7 +21,6 @@ import edu.hm.shareit.Services.MediaServiceResult;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 
-import java.text.ParseException;
 
 /**
  * Tests for the MediaRessource-class.
@@ -50,7 +48,7 @@ public class MediaResourceTest {
     public void setUp(){
         injector.injectMembers(this);
         when(serviceMock.getJWTCookie("token")).thenReturn("{\"sample-jwt\":\"user-id\"}");
-        when(serviceMock.deleteLists()).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.resetDatabse()).thenReturn(MediaServiceResult.SUCCESS);
     }
     
     /**
@@ -299,7 +297,7 @@ public class MediaResourceTest {
         when(serviceMock.addBook(b)).thenReturn(MediaServiceResult.SUCCESS);
         medRes.createBook(cookie, b);
         medRes.createDisc(cookie, d);
-        when(serviceMock.deleteLists()).thenReturn(MediaServiceResult.SUCCESS);
+        when(serviceMock.resetDatabse()).thenReturn(MediaServiceResult.SUCCESS);
         Response res = medRes.delAll(cookie);
         Response res1 = medRes.createBook(cookie, b);
         Response res2 = medRes.createDisc(cookie, d);

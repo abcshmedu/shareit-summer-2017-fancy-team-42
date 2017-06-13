@@ -353,7 +353,7 @@ public class MediaResource {
                     .build();
         }
 
-        MediaServiceResult res = ms.deleteLists();
+        MediaServiceResult res = ms.resetDatabse();
         return Response
                 .status(res.getCode())
                 .entity(res.getStatus())

@@ -48,7 +48,7 @@ public interface MediaService {
      *
      * @return MediaServiceResult
      */
-    MediaServiceResult deleteLists();
+    MediaServiceResult resetDatabse();
 
     /**
      *

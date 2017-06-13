@@ -10,17 +10,14 @@ import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
 import edu.hm.shareit.persistence.DatabaseManager;
-import edu.hm.shareit.resources.MediaResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.validation.constraints.AssertTrue;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.Response;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -46,8 +43,12 @@ public class MediaServiceTest {
         injector.injectMembers(this);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void TestGetBooks () throws Exception {
+    public void TestGetBooks() throws Exception {
         Book b = new Book("Mustermann", "9783065210201", "Title");
         //insert hat void, dehsalb muss nichts getan werden für den mock beim Einfügen.
         MediaServiceResult res =  medServ.addBook(b);
@@ -60,8 +61,12 @@ public class MediaServiceTest {
         assertTrue(book[0].equals(b));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void  TestGetDiscs () throws Exception {
+    public void  TestGetDiscs() throws Exception {
         final int fsk = 6;
         Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
         MediaServiceResult res = medServ.addDisc(d);
@@ -72,6 +77,42 @@ public class MediaServiceTest {
         Medium[] disc = medServ.getDiscs();
         assertTrue(disc[0].equals(d));
     }
+    
+    /**
+     * 
+     */
+    @Test
+    public void updateBookTest() {
+        Book b = new Book("Mustermann", "9783065210201", "Title");
+        assertEquals(medServ.addBook(b), MediaServiceResult.SUCCESS);
+        
+        b = new Book("Musterfrau", "9783065210201", "Title2");
+        assertEquals(medServ.updateBook(b), MediaServiceResult.SUCCESS);
+        
+        List<Book> books = new LinkedList<>();
+        books.add(b);
+        when(dbMock.getAllBooks()).thenReturn(books);
+        Medium[] book = medServ.getBooks();
+        assertTrue(book[0].equals(b));
+    }
 
+    /**
+     * 
+     */
+    @Test
+    public void updateDiscTest() {
+        final int fsk = 6;
+        Disc d = new Disc("5449000096241", "Mustermann", fsk, "Musterfilm");
+        assertEquals(medServ.addDisc(d), MediaServiceResult.SUCCESS);
+        
+        d = new Disc("5449000096241", "Musterfrau", fsk, "Musterfilm2");
+        assertEquals(medServ.updateDisc(d), MediaServiceResult.SUCCESS);
+        
+        List<Disc> discs = new LinkedList<>();
+        discs.add(d);
+        when(dbMock.getAllDiscs()).thenReturn(discs);
+        Medium[] disc = medServ.getDiscs();
+        assertTrue(disc[0].equals(d));
+    }
 
 }

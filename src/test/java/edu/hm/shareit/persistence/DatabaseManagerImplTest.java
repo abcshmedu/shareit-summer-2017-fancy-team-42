@@ -200,7 +200,6 @@ public class DatabaseManagerImplTest {
      * @throws DuplicateException 
      * 
      */
-    @Ignore
     @Test
     public void deleteAllTest() throws DuplicateException {
         final int fsk = 12;
