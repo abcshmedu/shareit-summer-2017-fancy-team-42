@@ -3,5 +3,3 @@ drop table TBook if exists
 drop table TDisc if exists
 create table TBook (isbn varchar(255) not null, title varchar(255), author varchar(255), primary key (isbn))
 create table TDisc (barcode varchar(255) not null, title varchar(255), director varchar(255), fsk integer not null, primary key (barcode))
-INSERT INTO TBOOK VALUES('9783065210201','Bauwagen','Peter Lustig')
-COMMIT
