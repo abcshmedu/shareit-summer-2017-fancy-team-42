@@ -212,7 +212,6 @@ public class MediaServiceImpl implements MediaService {
     }
 
     public String getJWTCookie(String token) {
-        System.out.println(token);
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
         WebResource webResource = client.resource(UriBuilder.fromUri(authServiceLink).build());
