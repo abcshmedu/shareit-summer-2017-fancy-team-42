@@ -4,16 +4,25 @@ package edu.hm.shareit.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 import edu.hm.shareit.Services.MediaService;
 import edu.hm.shareit.Services.MediaServiceResult;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
 import edu.hm.shareit.models.Medium;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -27,7 +36,7 @@ public class MediaResource {
 
     private final MediaService ms;
     private static final String CookieName = "Token";
-    private final String LogInPage = "http://localhost:8083/";
+    private final String LogInPage = "https://a4-auth-server-fancy-team-42.herokuapp.com/authenticate/auth/user";
 
     /**
      * Constructor of class.
@@ -368,6 +377,73 @@ public class MediaResource {
                 .status(res.getCode())
                 .entity(res.getStatus())
                 .build();
+    }
+
+    /**
+     * Help-method only for heroku to share the cookie between the apps.
+     * @param user String with user information
+     * @return Response with cookie and status.
+     */
+    @GET
+    @Path("/auth/{user}")
+    @Produces("application/json")
+    public Response getCookie(@PathParam("user") String user) {
+        String name = "";
+        String password = "";
+        try {
+            name = user.split("&")[0];
+            password = user.split("&")[1];
+        }
+        catch (Exception e) {
+            return Response
+                    .status(MediaServiceResult.BADREQUEST.getCode())
+                    .entity(MediaServiceResult.BADREQUEST.getStatus())
+                    .build();
+        }
+
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource webResource = client.resource(UriBuilder.fromUri(LogInPage).build());
+        JSONObject body = new JSONObject();
+        body.put("name", name);
+        body.put("password", password);
+        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, body.toString());
+        List<NewCookie> cookies = response.getCookies();
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = sdf.parse("1900-01-01");
+        } catch (ParseException e) {
+            return Response
+                    .status(MediaServiceResult.BADREQUEST.getCode())
+                    .entity(MediaServiceResult.BADREQUEST.getStatus())
+                    .build();
+        }
+
+        NewCookie ncookie = null;
+
+        for (NewCookie c:cookies) {
+                if (c.getExpiry().compareTo(date) > 0 && c.getName().equals(CookieName)) {
+                    date = c.getExpiry();
+                    ncookie = c;
+            }
+        }
+
+        if (ncookie != null) {
+            return Response
+                    .status(MediaServiceResult.SUCCESS.getCode())
+                    .entity(MediaServiceResult.SUCCESS.getStatus())
+                    .cookie(ncookie)
+                    .build();
+        }
+
+        return Response
+                .status(MediaServiceResult.BADREQUEST.getCode())
+                .entity(MediaServiceResult.BADREQUEST.getStatus())
+                .build();
+
     }
 
 }

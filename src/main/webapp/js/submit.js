@@ -5,6 +5,33 @@
  *  @author Axel Böttcher <axel.boettcher@hm.edu>
  */
 
+var getCookie = function() {
+    var  name = $("input[name=name]").val();
+    var password = $("input[name=password]").val();
+    var errorText = $("#errormessage");
+    $.ajax({
+        url: '/shareit/media/auth/'+name+'&'+password,
+        type:'GET',
+    })
+        .done((data) => {
+        var template = "{{#data}}{{token}}{{/data}}";
+    Mustache.parse(template);
+    //var output = Mustache.render(template, {data: data});
+    //var now = new Date();
+    //now.setTime(now.getTime() + 12 * 60 * 1000);
+    //document.cookie = "token="+output+"; expires=" + now.toUTCString() + "; path=/";
+
+    //errorText.removeClass("visible");
+    //errorText.addClass("hidden");
+    window.location.replace("index.html");
+})
+    .fail((error) => {
+    errorText.addClass("visible");
+    errorText.text(error.responseJSON.detail);
+    errorText.removeClass("hidden");
+});
+}
+
 /**
  * This function is used for transfer of new book info.
  */

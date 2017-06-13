@@ -5,7 +5,7 @@
 	version="3.0">
 	<display-name>RESTJerseyExample</display-name>
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>logIn.html</welcome-file>
 	</welcome-file-list>
 
      <servlet>

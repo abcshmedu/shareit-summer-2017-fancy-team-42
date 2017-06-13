@@ -1,0 +1,38 @@
+<html>
+<script src="js/jquery-3.1.1.js"></script>
+<script src="js/mustache.min-2.3.0.js"></script>
+
+<script src="js/submit.js"></script>
+
+<link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/skeleton.css">
+
+<link rel="stylesheet" href="css/shareit.css">
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="nine columns" id="content">
+            <h2>ShareIt</h2>
+            <h4>Enter your username and password to continue.</h4>
+            <table border="0">
+                <tbody>
+                <tr>
+                    <td><label for="name">User:</label></td>
+                    <td><input type="text" name="name"></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" name="password"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div><span id="errormessage" class="hidden error">ERROR</span></div>
+            <input type="button" class="button-primary" id="registerButton" onclick="getCookie()"
+                   value="Log In"/>
+        </div>
+    </div>
+</div>
+</body>
+</html>
