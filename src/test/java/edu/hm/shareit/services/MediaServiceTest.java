@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.hm.shareit.Services.MediaService;
+import edu.hm.shareit.Services.MediaServiceImpl;
 import edu.hm.shareit.Services.MediaServiceResult;
 import edu.hm.shareit.models.Book;
 import edu.hm.shareit.models.Disc;
@@ -29,6 +30,7 @@ public class MediaServiceTest {
     private final Injector injector = Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
+            bind(MediaService.class).to(MediaServiceImpl.class);
             bind(DatabaseManager.class).toInstance(mock(DatabaseManager.class));
         }
     });

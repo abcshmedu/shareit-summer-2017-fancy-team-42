@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+import java.util.List;
 
 /**
  * Created by Markus Krahl, Thomas Murschallon 21.04.17.
@@ -110,14 +111,14 @@ public class MediaServiceImpl implements MediaService {
 
     @Override
     public Medium[] getBooks() {
-        return (Medium[]) dbMan.getAllBooks().toArray();
-//        return MediaServiceImpl.bookList.toArray(new Medium[bookList.size()]);
+        List<Book>  bookList = dbMan.getAllBooks();
+        return bookList.toArray(new Medium[bookList.size()]);
     }
 
     @Override
     public Medium[] getDiscs() {
-        return (Medium[]) dbMan.getAllDiscs().toArray();
-//        return MediaServiceImpl.disclist.toArray(new Medium[disclist.size()]);
+        List<Disc>  discList = dbMan.getAllDiscs();
+        return discList.toArray(new Medium[discList.size()]);
     }
 
     /**
