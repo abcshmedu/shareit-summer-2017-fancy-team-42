@@ -30,6 +30,7 @@ public class MediaServiceImpl implements MediaService {
     
     /**
      * Constructor.
+     * @param dbMan 
      */
     @Inject
     public MediaServiceImpl(DatabaseManager dbMan) {
@@ -125,7 +126,7 @@ public class MediaServiceImpl implements MediaService {
      * Help-method only provided for test-cases. Do not use the method in the program.
      * @return Status whether list clearing was successful
      */
-    public MediaServiceResult resetDatabse() {
+    public MediaServiceResult resetDatabase() {
         dbMan.deleteAll();
         return MediaServiceResult.SUCCESS;
     }
@@ -211,6 +212,11 @@ public class MediaServiceImpl implements MediaService {
         return check == lastNumber;
     }
 
+    /**
+     * 
+     * @param token 
+     * @return String 
+     */
     public String getJWTCookie(String token) {
         System.out.println(token);
         ClientConfig config = new DefaultClientConfig();
@@ -221,7 +227,7 @@ public class MediaServiceImpl implements MediaService {
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, body.toString());
         String result = response.getEntity(String.class);
 
-
+ 
 
         return result;
     }
