@@ -12,7 +12,7 @@ import org.json.JSONObject;
 public class JettyStarter {
 
     public static final String APP_URL = "/";
-    public static final int PORT = 8080;
+    public static final int PORT = 8085;
     public static final String WEBAPP_DIR = "./src/main/webapp/";
 
     /**

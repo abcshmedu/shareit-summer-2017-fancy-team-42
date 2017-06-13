@@ -26,7 +26,7 @@ public class MediaServiceImpl implements MediaService {
     
     private DatabaseManager dbMan;
     
-    private static final String authServiceLink = "http://localhost:8083/authenticate/auth/valid";
+    private static final String authServiceLink = "https://a4-auth-server-fancy-team-42.herokuapp.com/authenticate/auth/valid";
     
     /**
      * Constructor.
@@ -137,6 +137,7 @@ public class MediaServiceImpl implements MediaService {
      * @return boolean, result of ISBN check
      */
     private boolean checkISBN(String isbn) {
+        isbn = isbn.replaceAll("-", "");
         final int length1 = 10;
         final int length2 = 13;
         final int xNumber = 10;
