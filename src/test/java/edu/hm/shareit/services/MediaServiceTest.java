@@ -24,7 +24,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by markus on 12.06.17.
+ * Created by Markus Krahl.
+ * Test class for MediaService.
  */
 public class MediaServiceTest {
     private final Injector injector = Guice.createInjector(new AbstractModule() {
@@ -41,7 +42,8 @@ public class MediaServiceTest {
     private DatabaseManager dbMock;
 
     /**
-     * 
+     * Prepares the mock and test objects.
+     * Binding instances to the interfaces.
      */
     @Before
     public void setUp() {
@@ -49,7 +51,7 @@ public class MediaServiceTest {
     }
 
     /**
-     * 
+     * Test to fetch all books.
      * @throws Exception 
      */
     @Test
@@ -83,7 +85,7 @@ public class MediaServiceTest {
     }
 
     /**
-     * 
+     * Test to fetch all discs.
      * @throws Exception 
      */
     @Test
@@ -115,7 +117,7 @@ public class MediaServiceTest {
     }
     
     /**
-     * 
+     * Test of updating a book.
      */
     @Test
     public void updateBookTest() {
@@ -148,7 +150,7 @@ public class MediaServiceTest {
     }
 
     /**
-     * 
+     * Test of updating a disc.
      */
     @Test
     public void updateDiscTest() {
@@ -183,7 +185,7 @@ public class MediaServiceTest {
     }
     
     /**
-     * 
+     * Test of clearing the database.
      */
     @Test
     public void resetDatabaseTest() {

@@ -25,7 +25,7 @@ public class DatabaseManagerImplTest {
 
     private static DatabaseManagerImpl manager;
     /**
-     * 
+     * Initiates the database;
      */
     @BeforeClass
     public static void inti() {
@@ -35,7 +35,7 @@ public class DatabaseManagerImplTest {
 
     
     /**
-     * 
+     * Cleans up the database.
      */
     @After
     public void cleanUp() {
@@ -53,7 +53,7 @@ public class DatabaseManagerImplTest {
         }
     }
     /**
-     * 
+     * Test to add a book.
      * @exception Exception 
      */
     @Test
@@ -66,8 +66,8 @@ public class DatabaseManagerImplTest {
     }
 
     /**
-     * @throws DuplicateException 
-     * 
+     * Test to fetch all added books;
+     * @throws DuplicateException
      */
     @Test
     public void getAllBooksTest() throws DuplicateException {
@@ -85,9 +85,9 @@ public class DatabaseManagerImplTest {
     }
 
     /**
+     * Test to update a book located on the database.
      * @throws DuplicateException 
-     * @throws MediaNotFoundException 
-     * 
+     * @throws MediaNotFoundException
      */
     @Test
     public void updateBookTest() throws DuplicateException, MediaNotFoundException {
@@ -101,7 +101,7 @@ public class DatabaseManagerImplTest {
     }
 
     /**
-     * 
+     * Test to add a disc.
      * @exception Exception 
      */
     @Test
@@ -115,8 +115,8 @@ public class DatabaseManagerImplTest {
     }
 
     /**
-     * @throws DuplicateException 
-     * 
+     * Test to fetch all discs.
+     * @throws DuplicateException
      */
     @Test
     public void getAllDiscsTest() throws DuplicateException {
@@ -136,9 +136,9 @@ public class DatabaseManagerImplTest {
     }
 
     /**
-     * @throws DuplicateException 
-     * @throws MediaNotFoundException 
-     * 
+     * Test to update a disc located on the database;
+     * @throws DuplicateException
+     * @throws MediaNotFoundException
      */
     @Test
     public void updateDiscTest() throws DuplicateException, MediaNotFoundException {
@@ -152,8 +152,8 @@ public class DatabaseManagerImplTest {
     }
 
     /**
-     * @throws DuplicateException 
-     * 
+     * Invalid insert operation of a duplicate book.
+     * @throws DuplicateException
      */
     @Test (expected = DuplicateException.class)
     public void insertDuplicateBookTest() throws DuplicateException {
@@ -164,8 +164,8 @@ public class DatabaseManagerImplTest {
     }
 
     /**
-     * @throws DuplicateException 
-     * 
+     * Invalid insert operation of a duplicate disc.
+     * @throws DuplicateException
      */
     @Test (expected = DuplicateException.class)
     public void insertDuplicateDiscTest() throws DuplicateException {
@@ -176,8 +176,8 @@ public class DatabaseManagerImplTest {
     }
     
     /**
-     * @throws MediaNotFoundException 
-     * 
+     * Invalid update of a book.
+     * @throws MediaNotFoundException
      */
     @Test (expected = MediaNotFoundException.class)
     public void wrongUpdateBookTest() throws MediaNotFoundException {
@@ -186,8 +186,8 @@ public class DatabaseManagerImplTest {
     }
     
     /**
-     * @throws MediaNotFoundException 
-     * 
+     * Invalid update of a disc.
+     * @throws MediaNotFoundException
      */
     @Test (expected = MediaNotFoundException.class)
     public void wrongUpdateDiscTest() throws MediaNotFoundException {
@@ -197,8 +197,8 @@ public class DatabaseManagerImplTest {
     }
     
     /**
-     * @throws DuplicateException 
-     * 
+     * Test to clear the database;
+     * @throws DuplicateException
      */
     @Test
     public void deleteAllTest() throws DuplicateException {

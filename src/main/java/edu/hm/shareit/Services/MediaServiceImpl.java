@@ -26,7 +26,7 @@ public class MediaServiceImpl implements MediaService {
     
     private DatabaseManager dbMan;
     
-    private static final String authServiceLink = "https://a4-auth-server-fancy-team-42.herokuapp.com/authenticate/auth/valid";
+    private static final String AUTH_SERVICE_LINK = "https://a4-auth-server-fancy-team-42.herokuapp.com/authenticate/auth/valid";
     
     /**
      * Constructor.
@@ -175,6 +175,7 @@ public class MediaServiceImpl implements MediaService {
             }
             int check = modNumber - (sum % modNumber);
             int lastNumber = Character.getNumericValue(isbn.charAt(isbn.length() - 1));
+            System.out.println(check == lastNumber);
             return check == lastNumber;
         }
         else {
@@ -221,7 +222,7 @@ public class MediaServiceImpl implements MediaService {
     public String getJWTCookie(String token) {
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
-        WebResource webResource = client.resource(UriBuilder.fromUri(authServiceLink).build());
+        WebResource webResource = client.resource(UriBuilder.fromUri(AUTH_SERVICE_LINK).build());
         JSONObject body = new JSONObject();
         body.put("token", token);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, body.toString());
